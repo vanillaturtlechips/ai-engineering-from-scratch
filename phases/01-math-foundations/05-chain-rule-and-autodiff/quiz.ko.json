@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "미적분학에서 연쇄 법칙(chain rule)은 무엇을 설명하나요?",
+      "options": [
+        "합의 미분은 각 항의 미분의 합이다",
+        "합성 함수의 미분은 각 함수의 미분의 곱이다",
+        "곱의 적분은 각 항의 적분의 곱이다",
+        "함수는 선형일 때만 미분 가능하다"
+      ],
+      "correct": 1,
+      "explanation": "y = f(g(x))일 때, 연쇄 법칙은 dy/dx = f'(g(x)) * g'(x)를 의미합니다. 체인의 각 연결점에서 미분값을 곱해줍니다. 이는 역전파(backpropagation)의 수학적 기초가 됩니다."
+    },
+    {
+      "stage": "pre",
+      "question": "계산 그래프(computational graph)란 무엇인가요?",
+      "options": [
+        "손실(loss) 대 훈련 단계(training steps) 그래프",
+        "노드가 연산(operations)이고 엣지가 값을 정방향 또는 기울기(gradient)를 역방향으로 전달하는 방향 그래프(directed graph)",
+        "신경망(neural network) 구조를 보여주는 다이어그램",
+        "훈련 데이터(training data) 저장에 사용되는 그래프 데이터베이스(graph database)"
+      ],
+      "correct": 1,
+      "explanation": "계산 그래프는 계산에서 연산의 순서를 나타냅니다. 데이터는 그래프를 통해 정방향으로 흐르고, 역전파(backpropagation) 중에는 기울기(gradient)가 역방향으로 흐릅니다."
+    },
+    {
+      "stage": "post",
+      "question": "PyTorch가 순방향 모드(forward-mode) 대신 역방향 모드(reverse-mode) 자동 미분(autodiff, 백프로파게이션)을 사용하는 이유는 무엇인가요?",
+      "options": [
+        "역방향 모드가 수치적으로 더 정확하다",
+        "역방향 모드는 단일 역전파(backward pass)에서 모든 그래디언트를 계산하는 반면, 순방향 모드는 입력 변수당 한 번의 순방향 패스(forward pass)가 필요하다 -- 신경망은 수백만 개의 입력 변수를 가지지만 손실 출력은 하나이다",
+        "역방향 모드가 메모리를 덜 사용한다",
+        "순방향 모드는 비선형 함수를 처리할 수 없다"
+      ],
+      "correct": 1,
+      "explanation": "신경망은 수백만 개의 가중치 입력을 가지지만 단일 스칼라 손실 값을 출력한다. 역방향 모드는 전체 역전파(backward pass)가 한 번만 필요하다. 순방향 모드는 가중치당 한 번의 순방향 패스가 필요해 수백만 번의 패스가 발생하므로 비실용적이다."
+    },
+    {
+      "stage": "post",
+      "question": "Value 클래스 autograd 엔진에서 backward 함수가 기울기 누적에 '=' 대신 '+='를 사용하는 이유는 무엇인가요?",
+      "options": [
+        "여러 샘플에 걸쳐 기울기를 평균화하기 위해",
+        "여러 연산에 사용된 값은 각 연산으로부터 기울기 기여를 받으며, 이를 합산해야 하기 때문",
+        "기울기에서 수치적 오버플로를 방지하기 위해",
+        "파이썬이 클로저에서 '=' 연산자를 지원하지 않기 때문에"
+      ],
+      "correct": 1,
+      "explanation": "값이 여러 연산에 입력될 경우(예: x가 x*y와 x+z 모두에 사용됨), 해당 값의 총 기울기는 모든 기울기 기여분의 합입니다. '='를 사용하면 이전 기여분이 덮어쓰여집니다."
+    },
+    {
+      "stage": "post",
+      "question": "기울기 확인(gradient checking)이란 무엇이며 언제 사용해야 하나요?",
+      "options": [
+        "기울기 폭발(exploding gradients)을 방지하기 위해 기울기가 임계값(threshold) 아래인지 확인하는 것",
+        "역전파(backward pass)의 정확성을 검증하기 위해 자동 미분(autodiff) 기울기와 수치적 유한 차분(numerical finite-difference) 기울기를 비교하는 것",
+        "훈련 중 모든 파라미터가 0이 아닌 기울기를 받았는지 확인하는 것",
+        "소실 기울기(vanishing gradients)를 감지하기 위해 훈련 중 기울기 크기(magnitude)를 모니터링하는 것"
+      ],
+      "correct": 1,
+      "explanation": "기울기 확인은 (f(x+h) - f(x-h)) / 2h를 통해 수치적 미분(numerical derivatives)을 계산하고 이를 자동 미분 기울기와 비교합니다. 오토그래드 엔진(autograd engine)에 새로운 연산을 추가하거나 훈련 실패를 디버깅할 때 사용하세요."
+    }
+  ]
+}

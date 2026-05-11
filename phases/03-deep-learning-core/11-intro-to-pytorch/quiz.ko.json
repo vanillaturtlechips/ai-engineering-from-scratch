@@ -1,0 +1,62 @@
+[
+  {
+    "question": "PyTorch에서 오토그래드(autograd)란 무엇인가요?",
+    "options": [
+      "데이터 로딩 라이브러리",
+      "연산을 기록하고 수동 역전파 구현 없이 기울기를 자동 계산하는 자동 미분 엔진",
+      "모델 압축 도구",
+      "하이퍼파라미터 튜닝 프레임워크"
+    ],
+    "correct": 1,
+    "explanation": "PyTorch의 오토그래드는 순전파 계산 중 계산 그래프를 구성하고 .backward() 호출 시 기울기를 자동 계산합니다. 이는 각 모듈에서 수동으로 backward()를 구현할 필요가 없게 합니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "torch.no_grad()는 어떤 역할을 하며 언제 사용해야 하나요?",
+    "options": [
+      "과적합(overfitting)을 방지합니다",
+      "추론(inference) 시 기울기(gradient) 추적을 비활성화하여 학습이 필요 없을 때 메모리와 계산 비용을 절약합니다",
+      "모든 모델 가중치(weights)를 고정(freeze)합니다",
+      "GPU 가속(acceleration)을 활성화합니다"
+    ],
+    "correct": 1,
+    "explanation": "추론(inference) 중에는 기울기(gradient)가 필요하지 않습니다. torch.no_grad()는 기울기 추적을 비활성화하여 계산 그래프(computational graph) 저장에 사용되는 메모리를 절약하고 계산 속도를 높입니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "PyTorch에서 nn.Linear(784, 256)은 무엇을 생성하나요?",
+    "options": [
+      "ReLU 활성화 레이어",
+      "(256, 784) 가중치 행렬과 (256,) 편향 벡터를 갖는 완전 연결 레이어",
+      "p=784/256인 드롭아웃 레이어",
+      "배치 정규화 레이어"
+    ],
+    "correct": 1,
+    "explanation": "nn.Linear(in_features, out_features)는 y = x @ W^T + b를 계산하는 레이어를 생성합니다. 여기서 W의 형태는 (256, 784)이고 b의 형태는 (256,)입니다. 이는 직접 구현한 Layer 클래스와 동일한 PyTorch 구현입니다.",
+    "stage": "post"
+  },
+  {
+    "question": "PyTorch에서 계산 그래프의 모든 파라미터에 대한 기울기(gradient)를 계산하는 메서드는 무엇인가요?",
+    "options": [
+      "optimizer.step()",
+      "model.forward()",
+      "loss.backward()",
+      "optimizer.zero_grad()"
+    ],
+    "correct": 2,
+    "explanation": "loss.backward()는 계산 그래프를 역방향으로 탐색하며, 기울기(gradient)가 필요한 모든 파라미터 p에 대해 dL/dp를 계산합니다. 이후 optimizer.step()이 이 기울기(gradient)를 사용하여 파라미터를 업데이트합니다.",
+    "stage": "post"
+  },
+  {
+    "question": "PyTorch의 학습 루프가 순수 파이썬 미니 프레임워크보다 훨씬 빠른 이유는 무엇인가요?",
+    "options": [
+      "PyTorch는 다른 알고리즘을 사용합니다",
+      "PyTorch는 GPU에서 최적화된 C++/CUDA 커널로 연산을 실행하는 반면, 순수 파이썬 루프는 한 번에 하나의 연산을 해석합니다",
+      "PyTorch는 더 작은 데이터 타입을 사용합니다",
+      "PyTorch는 역전파(backward pass)를 건너뜁니다"
+    ],
+    "correct": 1,
+    "explanation": "PyTorch는 행렬 연산을 대규모 병렬 처리가 가능한 GPU에서 실행되는 고도로 최적화된 C++ 및 CUDA 커널에 위임합니다. 순수 파이썬은 각 연산마다 인터프리터 오버헤드가 발생하며 순차적으로 루프를 실행합니다.",
+    "stage": "post"
+  }
+]

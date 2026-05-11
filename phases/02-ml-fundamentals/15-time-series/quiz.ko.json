@@ -1,0 +1,67 @@
+[
+  {
+    "id": "timeseries-pre-1",
+    "stage": "pre",
+    "question": "시계열 데이터에 무작위 train/test 분할이 왜 유효하지 않은가?",
+    "options": [
+      "무작위 분할은 데이터셋을 너무 작게 만든다",
+      "무작위 분할은 미래 정보를 훈련 세트에 유출시켜 모델이 부정행위를 할 수 있게 한다",
+      "시계열 데이터는 전혀 분할할 수 없다",
+      "무작위 분할은 분류 문제에만 작동한다"
+    ],
+    "correct": 1,
+    "explanation": "무작위 분할에서는 미래 데이터 포인트가 훈련 세트에 포함되고 과거 포인트가 테스트 세트에 들어갈 수 있다. 그러면 모델은 미래 정보를 사용해 과거를 예측하게 되어 거짓으로 낙관적인 결과를 제공한다."
+  },
+  {
+    "id": "timeseries-pre-2",
+    "stage": "pre",
+    "question": "시계열 데이터가 정상성(stationary)을 갖는다는 것은 무엇을 의미하나요?",
+    "options": [
+      "시간에 따라 값이 절대 변하지 않는다",
+      "평균(mean), 분산(variance), 자기상관(autocorrelation) 같은 통계적 특성이 시간에 따라 변하지 않는다",
+      "계절적 패턴(seasonal patterns)이 없다",
+      "항상 상승 추세(trend)를 보인다"
+    ],
+    "correct": 1,
+    "explanation": "정상성 시계열은 시간에 따라 평균, 분산, 자기상관 구조가 일정합니다. 대부분의 예측 방법은 정상성을 가정하며, 비정상성(non-stationary) 시계열은 차분(differencing)이나 추세 제거(detrending)가 선행되어야 합니다."
+  },
+  {
+    "id": "timeseries-post-1",
+    "stage": "post",
+    "question": "시계열 데이터를 차분(differencing)하는 목적은 무엇인가요?",
+    "options": [
+      "데이터 포인트 수를 증가시키기 위해",
+      "트렌드를 제거하고 연속 값 사이의 변화를 모델링하여 시계열을 정상성(stationary)으로 만들기 위해",
+      "회귀(regression)를 분류(classification)로 변환하기 위해",
+      "값을 0과 1 사이로 정규화(normalize)하기 위해"
+    ],
+    "correct": 1,
+    "explanation": "차분(differencing)은 각 값을 이전 값과의 변화량으로 대체합니다: diff[t] = value[t] - value[t-1]. 이는 트렌드(trend)를 제거하여 시계열을 정상성(stationary)에 가깝게 만듭니다."
+  },
+  {
+    "id": "timeseries-post-2",
+    "stage": "post",
+    "question": "래그 특징(lag feature)은 시계열 데이터를 지도 학습 문제로 변환합니다. y[t]를 예측하기 위한 래그-3 특징(lag-3 feature)은 무엇인가요?",
+    "options": [
+      "다음 3개 값의 평균: (y[t+1] + y[t+2] + y[t+3]) / 3",
+      "3단계 전의 값: y[t-3]",
+      "시계열 데이터의 3차 미분",
+      "현재 값과 3단계 이후 값의 차이"
+    ],
+    "correct": 1,
+    "explanation": "래그-3 특징은 y[t-3]로, 과거 3단계 시점의 값을 의미합니다. 과거 값을 입력 특징으로 사용하면 회귀(regression), 트리(tree) 등의 표준 ML 모델이 전용 알고리즘 없이도 시계열 예측이 가능해집니다."
+  },
+  {
+    "id": "timeseries-post-3",
+    "stage": "post",
+    "question": "워크-포워드 검증(walk-forward validation)은 시계열 데이터를 확장 또는 슬라이딩 윈도우로 분할합니다. 왜 이것이 시계열에 K-폴드 교차 검증(K-fold CV)보다 더 나은가요?",
+    "options": [
+      "워크-포워드는 계산 속도가 더 빠름",
+      "워크-포워드는 시간적 순서를 존중하며, 과거 데이터로만 학습하고 미래 데이터로 테스트하여 선견 편향(lookahead bias)을 방지함",
+      "K-폴드 교차 검증은 수치형 데이터에 사용할 수 없음",
+      "워크-포워드는 학습에 더 많은 데이터를 사용함"
+    ],
+    "correct": 1,
+    "explanation": "워크-포워드 검증은 항상 과거 데이터로 학습하고 미래 데이터로 테스트하여 실제 배포 환경을 모방합니다. K-폴드 교차 검증은 데이터를 섞기 때문에 미래 데이터로 학습하고 과거 데이터를 예측할 수 있어 시간적 누출(temporal leakage)이 발생할 수 있습니다."
+  }
+]

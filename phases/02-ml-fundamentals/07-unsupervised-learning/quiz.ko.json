@@ -1,0 +1,67 @@
+[
+  {
+    "id": "unsupervised-pre-1",
+    "stage": "pre",
+    "question": "비지도 학습이 지도 학습과 구별되는 점은 무엇인가요?",
+    "options": [
+      "비지도 학습은 더 많은 데이터를 사용합니다",
+      "비지도 학습에는 레이블된 출력이 없습니다 -- 알고리즘이 스스로 구조를 찾습니다",
+      "비지도 학습은 텍스트 데이터만 처리할 수 있습니다",
+      "비지도 학습은 항상 더 나은 결과를 생성합니다"
+    ],
+    "correct": 1,
+    "explanation": "비지도 학습에서는 레이블이 없습니다. 알고리즘은 올바른 출력이 무엇인지 알려주지 않아도 데이터 내에서 패턴, 그룹화 또는 구조를 발견합니다."
+  },
+  {
+    "id": "unsupervised-pre-2",
+    "stage": "pre",
+    "question": "K-평균(K-Means)은 훈련 전에 무엇을 지정해야 하나요?",
+    "options": [
+      "정확한 클러스터 중심(cluster centers)",
+      "클러스터 개수 K",
+      "각 데이터 포인트의 레이블(labels)",
+      "사용할 거리 측정법(distance metric)"
+    ],
+    "correct": 1,
+    "explanation": "K-평균(K-Means)은 클러스터 개수 K를 입력으로 요구합니다. 이후 반복적으로 가장 가까운 중심점(centroid)에 데이터 포인트를 할당하고 수렴할 때까지 중심점을 재계산합니다."
+  },
+  {
+    "id": "unsupervised-post-1",
+    "stage": "post",
+    "question": "K-평균(K-Means)은 서로 맞물린 두 개의 초승달 모양에서는 실패하지만 DBSCAN은 성공합니다. 왜 그럴까요?",
+    "options": [
+      "DBSCAN은 K-평균보다 더 많은 데이터를 사용합니다",
+      "DBSCAN은 밀도(density) 기반으로 클러스터를 찾기 때문에 임의의 모양을 발견할 수 있지만, K-평균은 구형(spherical) 클러스터를 가정합니다",
+      "DBSCAN은 모든 데이터셋에서 K-평균보다 항상 성능이 좋습니다",
+      "K-평균은 2D 데이터를 처리할 수 없습니다"
+    ],
+    "correct": 1,
+    "explanation": "K-평균은 가장 가까운 중심점(centroid)에 데이터 포인트를 할당하여 구형(볼록한) 클러스터를 생성합니다. 반면 DBSCAN은 밀집된 영역에서 클러스터를 성장시켜, 밀도 기반으로 연결된 클러스터라면 어떤 모양이든 발견할 수 있습니다."
+  },
+  {
+    "id": "unsupervised-post-2",
+    "stage": "post",
+    "question": "실루엣 점수(silhouette score)는 무엇을 측정하는가?",
+    "options": [
+      "발견된 클러스터의 총 개수",
+      "각 데이터 포인트가 자신의 클러스터 내에서 얼마나 유사한지 가장 가까운 다른 클러스터와 비교했을 때의 정도",
+      "클러스터링 알고리즘의 속도",
+      "데이터 내 이상치(outlier)의 비율"
+    ],
+    "correct": 1,
+    "explanation": "실루엣 점수 = (b - a) / max(a, b), 여기서 a는 클러스터 내 평균 거리(mean intra-cluster distance), b는 가장 가까운 클러스터 평균 거리(mean nearest-cluster distance)입니다. -1(잘못된 클러스터)부터 +1(잘 클러스터링됨) 사이의 값을 가집니다."
+  },
+  {
+    "id": "unsupervised-post-3",
+    "stage": "post",
+    "question": "가우시안 혼합 모델(Gaussian Mixture Model)은 K-평균(K-Means)과 군집 할당 방식에서 어떻게 다른가요?",
+    "options": [
+      "GMM은 각 데이터 포인트가 정확히 하나의 군집에 속하는 하드 할당(hard assignment)을 사용합니다",
+      "GMM은 각 데이터 포인트가 각 군집에 속할 확률을 가지는 소프트(확률적) 할당(soft/probabilistic assignment)을 제공합니다",
+      "GMM은 중심점(centroid)을 전혀 사용하지 않습니다",
+      "GMM은 1차원 데이터만 처리할 수 있습니다"
+    ],
+    "correct": 1,
+    "explanation": "K-평균은 각 데이터 포인트를 정확히 하나의 군집에 할당합니다(하드 할당). GMM은 각 데이터 포인트가 각 가우시안 성분(Gaussian component)에 속할 확률을 계산하며(소프트 할당), 타원형 및 중첩되는 군집을 모델링할 수 있습니다."
+  }
+]

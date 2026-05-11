@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "'버전 컨트롤'은 주로 무엇을 하는 데 도움이 되나요?",
+      "options": [
+        "코드 실행 속도 향상",
+        "시간에 따른 파일 변경 사항 추적 및 다른 사람과 협업",
+        "디스크 공간 절약을 위한 파일 압축",
+        "코드의 버그를 자동으로 수정"
+      ],
+      "correct": 1,
+      "explanation": "git과 같은 버전 컨트롤 시스템은 파일에 적용된 모든 변경 사항을 추적하여 이전 상태로 되돌리거나 동일한 코드베이스에서 다른 사람들과 협업할 수 있게 해줍니다."
+    },
+    {
+      "stage": "pre",
+      "question": "소프트웨어 개발에서 '리포지토리(repository)'란 무엇인가요?",
+      "options": [
+        "Google Drive와 같은 클라우드 스토리지 서비스",
+        "버전 관리 시스템으로 추적되는 파일들과 그 변경 이력 전체를 포함한 집합",
+        "사용자 데이터를 저장하는 데이터베이스",
+        "라이브러리 설치를 위한 패키지 관리자"
+      ],
+      "correct": 1,
+      "explanation": "리포지토리(repo)는 git으로 추적되는 디렉터리로, 프로젝트 파일들과 해당 파일들에 대한 전체 변경 이력을 포함합니다."
+    },
+    {
+      "stage": "post",
+      "question": "git에서 작업을 저장하고 백업하는 올바른 순서는 무엇인가요?",
+      "options": [
+        "git push, git add, git commit",
+        "git commit, git add, git push",
+        "git add, git commit, git push",
+        "git clone, git add, git push"
+      ],
+      "correct": 2,
+      "explanation": "먼저 'git add'로 변경 사항을 스테이징한 후, 'git commit'으로 스냅샷을 저장하고, 마지막으로 'git push'로 원격 저장소에 업로드합니다. 이것이 일상적인 워크플로우입니다."
+    },
+    {
+      "stage": "post",
+      "question": "'git checkout -b experiment/new-optimizer'는 무엇을 하는가?",
+      "options": [
+        "GitHub에서 experiment/new-optimizer라는 브랜치를 다운로드한다",
+        "experiment/new-optimizer라는 새 브랜치를 생성하고 해당 브랜치로 전환한다",
+        "experiment/new-optimizer 브랜치를 삭제한다",
+        "모든 파일을 experiment/new-optimizer 브랜치와 일치하도록 되돌린다"
+      ],
+      "correct": 1,
+      "explanation": "'-b' 플래그는 주어진 이름으로 새 브랜치를 생성하고 즉시 해당 브랜치로 전환한다. 이를 통해 메인 브랜치에 영향을 주지 않고 실험할 수 있다."
+    },
+    {
+      "stage": "post",
+      "question": "왜 '.gitignore'에 '.pt', '.pth', '.safetensors'를 추가해야 하나요?",
+      "options": [
+        "이들은 커밋하지 말아야 할 Python 테스트 파일입니다",
+        "이들은 git에 너무 커서 추적하기 어려운 모델 체크포인트 파일이며 재생성할 수 있습니다",
+        "이들은 민감한 API 키를 포함하고 있습니다",
+        "Git은 어떤 종류의 바이너리 파일도 추적할 수 없습니다"
+      ],
+      "correct": 1,
+      "explanation": "모델 체크포인트 파일(.pt, .pth, .safetensors)은 종종 기가바이트 단위 크기입니다. Git은 대용량 바이너리 파일을 처리하도록 설계되지 않았으므로, 이러한 파일은 제외하고 재생성하거나 별도로 저장해야 합니다."
+    }
+  ]
+}

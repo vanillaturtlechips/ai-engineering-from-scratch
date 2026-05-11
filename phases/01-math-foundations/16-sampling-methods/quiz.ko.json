@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "온도(temperature) < 1.0은 언어 모델의 출력 분포에 어떤 영향을 미칩니까?",
+      "options": [
+        "분포를 더 균일하게 만듭니다(더 무작위적)",
+        "분포를 더 날카롭게 만들어 가장 높은 확률의 토큰이 더 많이 선택되도록 합니다",
+        "상위 토큰을 제외한 모든 토큰을 제거합니다",
+        "출력에 영향을 미치지 않습니다"
+      ],
+      "correct": 1,
+      "explanation": "온도 < 1.0은 로짓(logit)을 1.0보다 작은 수로 나누어 로짓 간 차이를 증폭시킵니다. 소프트맥스(softmax) 이후 가장 높은 확률의 토큰이 더 큰 비중을 차지하게 됩니다. 온도가 0에 가까워지면 탐욕적(argmax) 디코딩이 됩니다."
+    },
+    {
+      "stage": "pre",
+      "question": "top-k 샘플링과 top-p(뉴클레우스) 샘플링의 주요 차이점은 무엇인가요?",
+      "options": [
+        "top-k가 top-p보다 빠르다",
+        "top-k는 고정된 수의 토큰을 유지하고, top-p는 누적 확률에 따라 가변적인 수의 토큰을 유지한다",
+        "top-p는 temperature = 1.0에서만 작동한다",
+        "top-k는 로짓(logits)에서 작동하고 top-p는 확률(probabilities)에서 작동한다"
+      ],
+      "correct": 1,
+      "explanation": "top-k는 확률 분포와 무관하게 항상 정확히 k개의 토큰을 유지합니다. top-p는 누적 확률이 p를 초과하는 가장 작은 토큰 집합을 적응적으로 유지합니다. 모델이 확신할 때는 적은 토큰을 유지하고, 불확실할 때는 많은 토큰을 유지합니다."
+    },
+    {
+      "stage": "post",
+      "question": "표준 샘플링 연산 z ~ N(mu, sigma^2)을 통해 역전파(backpropagate)할 수 없는 이유는 무엇인가요?",
+      "options": [
+        "정규 분포(Normal distribution)는 기울기(gradient)를 갖지 않습니다",
+        "샘플링 연산은 비결정적(non-deterministic)이며 mu와 sigma에 대한 잘 정의된 도함수(derivative)가 없습니다",
+        "PyTorch는 정규 분포를 지원하지 않습니다",
+        "기울기(gradient)는 항상 정확히 0입니다"
+      ],
+      "correct": 1,
+      "explanation": "샘플링은 확률적 불연속성(stochastic discontinuity)을 도입합니다 — 무작위 추출(random draw)에 대해 d(sample)/d(mu)를 계산할 수 없습니다. 재매개변수화 트릭(reparameterization trick)은 z = mu + sigma * epsilon (여기서 epsilon ~ N(0,1))로 표현함으로써 이 문제를 해결하며, z를 mu와 sigma의 결정적(deterministic)이고 미분 가능한 함수로 만듭니다."
+    },
+    {
+      "stage": "post",
+      "question": "메트로폴리스-헤이스팅스 MCMC에서 제안 표준 편차(proposal standard deviation)를 너무 크게 설정하면 어떻게 되나요?",
+      "options": [
+        "체인이 더 큰 단계를 밟기 때문에 수렴 속도가 빨라진다",
+        "대부분의 제안이 저확률 영역에 도달하여 거부되므로 체인이 거의 움직이지 않는다",
+        "정상 분포(stationary distribution)가 균일 분포로 바뀐다",
+        "버닝-인(burn-in) 기간이 0이 된다"
+      ],
+      "correct": 1,
+      "explanation": "제안 표준 편차가 클 경우, 제안된 점들이 현재 위치에서 멀리 떨어져 저확률 영역에 도달할 가능성이 높습니다. 이는 거부되며 체인이 현재 위치에 머무르게 합니다. 고차원 가우시안 제안의 경우 최적 수용률은 약 23%입니다."
+    },
+    {
+      "stage": "post",
+      "question": "거부 샘플링에서 목표 분포의 차원(dimensionality)이 증가할 때 수용률(acceptance rate)은 어떻게 되는가?",
+      "options": [
+        "차원에 관계없이 일정하게 유지된다",
+        "수용할 차원이 더 많아지므로 증가한다",
+        "제안 분포(proposal distribution)의 대부분의 부피가 거부되면서 지수적으로 감소한다",
+        "모든 경우에 50%에 가까워진다"
+      ],
+      "correct": 2,
+      "explanation": "고차원에서는 제안 분포와 목표 분포가 겹치는 부피가 지수적으로 줄어든다. 경계값 M이 증가하고, 수용률(1/M)은 지수적으로 감소한다. 이는 거부 샘플링의 차원의 저주(curse of dimensionality) 현상이다."
+    }
+  ]
+}

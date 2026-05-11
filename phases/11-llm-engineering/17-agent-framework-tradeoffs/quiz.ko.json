@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "크래시 후 작업을 재개해야 하고, 실행 중간에 인간의 승인을 받아야 하며, 세 개의 리트리버로 병렬 팬아웃해야 하는 워크플로우에 가장 적합한 프레임워크는 무엇인가요?",
+      "options": [
+        "CrewAI",
+        "AutoGen",
+        "LangGraph",
+        "Agno"
+      ],
+      "correct": 2,
+      "explanation": "AutoGen은 인간-에이전트 상호작용을 지원하며, 크래시 복구 및 병렬 작업 처리에 적합한 구조를 제공합니다. LangGraph도 상태 관리를 지원하지만, 인간 승인 통합 측면에서 AutoGen이 더 직관적입니다. CrewAI는 주로 순차적 워크플로우에 최적화되어 있습니다.",
+      "stage": 1
+    },
+    {
+      "id": 2,
+      "prompt": "LLM 선택 라우팅이 명시적 라우팅보다 턴당 더 많은 토큰 비용을 발생시키는 이유는 무엇인가요?",
+      "choices": [
+        "다음 노드를 병렬로 사전 페칭하여 레이턴시를 헤지하기 때문입니다.",
+        "플래너 LLM 호출이 매 턴마다 다음 단계를 선택하며, 모든 결정에 대해 프롬프트 및 완료 토큰이 추가되기 때문입니다.",
+        "크루 내 모든 에이전트를 위해 도구 목록을 복제하기 때문입니다.",
+        "전체 대화 기록을 검증자 모델에 전송하기 때문입니다."
+      ],
+      "answer": 1
+    },
+    {
+      "id": 3,
+      "question": "코드 리뷰에서 제안자-평가자 대화는 어떤 프레임워크의 핵심 추상화에 자연스럽게 대응되나요?",
+      "options": [
+        "CrewAI의 순차적 Crew",
+        "LangGraph의 StateGraph",
+        "AutoGen의 GroupChat / ConversableAgent 쌍",
+        "Agno의 도구 사용 단일 에이전트"
+      ],
+      "answer": 2,
+      "explanation": "AutoGen의 GroupChat과 ConversableAgent는 다중 에이전트 간 대화 및 역할 기반 상호작용을 지원하므로, 코드 리뷰에서 제안자(Proposer)와 평가자(Critic) 역할을 하는 에이전트 간 협업에 적합합니다. 이 프레임워크는 구조화된 그룹 대화를 통해 반복적인 피드백 루프를 구현할 수 있어 해당 시나리오에 가장 잘 부합합니다."
+    },
+    {
+      "id": 4,
+      "question": "에이전트(Agent) 프리미티브에 세션 및 메모리 지속성을 위해 SQLite, Postgres, Redis, Mongo, DynamoDB와 같은 내장 스토리지 드라이버가 직접 연결된 프레임워크는 무엇인가요?",
+      "options": [
+        "LangGraph",
+        "CrewAI",
+        "AutoGen",
+        "Agno"
+      ],
+      "correct": 3,
+      "explanation": "Agno 프레임워크는 에이전트 프리미티브에 다양한 데이터베이스 드라이버를 직접 통합하여 세션 상태와 메모리 데이터를 지속적으로 저장할 수 있는 기능을 제공합니다. 다른 옵션들은 이와 같은 광범위한 내장 스토리지 솔루션을 기본적으로 지원하지 않습니다.",
+      "stage": 1
+    },
+    {
+      "id": 5,
+      "question": "두 단계(summarizer)를 가진 요약기가 있습니다: 텍스트 가져오기(fetch text), 요약하기(summarize). 올바른 프레임워크 선택 옵션은 무엇인가요?",
+      "choices": [
+        "LangGraph StateGraph — 신뢰성을 위해 항상 프레임워크를 사용해야 합니다.",
+        "CrewAI with 연구자(researcher) + 요약자(summarizer) 역할 — 역할이 더 명확하게 만듭니다.",
+        "공급자 SDK(provider SDK)를 사용한 일반 Python — 작은 파이프라인에는 프레임워크가 없는 것이 가장 빠른 프레임워크입니다.",
+        "AutoGen 그룹 채팅(GroupChat) — 두 에이전트가 최상의 요약에 대해 논쟁할 수 있습니다."
+      ],
+      "correct": 2,
+      "explanation": "단순한 두 단계 파이프라인에서는 프레임워크 오버헤드 없이 공급자 SDK를 직접 사용하는 것이 가장 효율적입니다. 복잡한 워크플로우나 다중 에이전트 상호작용이 필요하지 않은 경우 일반 Python 구현이 최소한의 복잡성으로 요구사항을 충족합니다.",
+      "stage": 3
+    }
+  ]
+}

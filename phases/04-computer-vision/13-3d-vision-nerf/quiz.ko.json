@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "왜 일반 CNN은 포인트 클라우드를 직접 처리할 수 없나요?",
+      "options": [
+        "포인트 클라우드는 너무 크다",
+        "CNN은 입력 픽셀이 정규 그리드 상에 배열되고 이웃 구조를 가진다고 가정하는데, 포인트 클라우드는 R^3 상의 순서가 없는 점 집합이며 그리드가 없고 크기가 가변적이어서 두 가정 모두 위반한다",
+        "CNN은 그레이스케일에만 작동한다",
+        "포인트 클라우드는 쿼터니언을 필요로 한다"
+      ],
+      "correct": 1,
+      "explanation": "CNN 컨볼루션은 정규 이웃 구조가 필요합니다. 포인트 클라우드는 그리드도 없고 고정된 점 개수도 없습니다. 포인트 클라우드를 복셀화(voxelising)하면 그리드가 복원되지만(3D CNN에서 사용), 메모리 비용이 큽니다. PointNet은 각 점을 독립적으로 처리한 후 대칭적으로 집계하는 순열 불변(permutation-invariant) 아키텍처로 이 문제를 우회했습니다."
+    },
+    {
+      "stage": "pre",
+      "question": "PointNet이 입력 포인트에 대해 순열 불변성(permutation-invariant)을 갖도록 하는 트릭은 무엇인가요?",
+      "options": [
+        "배치 정규화(Batch normalisation)",
+        "모든 포인트에 독립적으로 적용되는 공유 MLP(shared MLP) 후 대칭적 집계(최대 풀링(max pool) 또는 합계(sum))를 수행; 집계가 포인트 순서를 무시하므로 전체 네트워크 출력도 순서 불변(order-invariant)이 됨",
+        "특수 손실 함수(A special loss function)",
+        "순전파(forward pass) 전에 포인트 정렬(Sorting the points)"
+      ],
+      "correct": 1,
+      "explanation": "대칭 함수(symmetric-function) 트릭은 2017년 이후 모든 포인트 클라우드 네트워크 패밀리의 핵심입니다. 모든 포인트에 동일한 MLP(동일 가중치, 순서 의존성 없음)를 실행한 후 순서에 의존하지 않는 함수로 집계합니다. 최대값(max)과 합계(sum)는 두 가지 표준적인 선택 사항이며, PointNet과 대부분의 후속 연구에서는 최대값을 사용합니다."
+    },
+    {
+      "stage": "post",
+      "question": "원시 (x, y, z) 좌표를 입력으로 받는 기본 NeRF MLP는 흐릿한 결과를 생성합니다. 이를 해결하는 방법은 무엇인가요?",
+      "options": [
+        "훈련 데이터 추가",
+        "위치 인코딩: MLP 이전에 좌표를 푸리에 특징(여러 l에 대한 sin/cos of 2^l * pi * x)으로 투영; 이는 저주파 편향 MLP가 고주파 세부 사항을 표현할 수 있게 합니다",
+        "16비트 정밀도 사용",
+        "CNN으로 전환"
+      ],
+      "correct": 1,
+      "explanation": "MLP는 스펙트럼 편향이 있습니다: 부드러운 함수는 쉽게 적합하지만 고주파에서는 어려움을 겪습니다. 위치 인코딩은 각 좌표를 고주파 신호를 이미 포함하는 벡터로 변환합니다. 그러면 MLP는 이러한 특징을 선명한 기하학적 구조와 텍스처로 조합하는 훨씬 쉬운 작업을 수행하게 됩니다. 이 기법은 트랜스포머 위치 인코딩과 확산 시간 임베딩에서도 사용됩니다."
+    },
+    {
+      "stage": "post",
+      "question": "NeRF에서 픽셀은 어떻게 계산되나요?",
+      "options": [
+        "최종 MLP 레이어(final MLP layer)의 출력으로",
+        "카메라에서 픽셀을 통과하는 광선(ray)을 캐스팅하고, 광선을 따라 N개의 점을 샘플링한 후 각 점에서 MLP에 (밀도(density), 색상(colour))을 질의하며, 광선을 따라 알파 가중치(alpha-weighted) 색상을 누적하는 체적 렌더링(volumetric rendering) 방정식으로 샘플을 합성하여",
+        "미리 계산된 복셀 그리드(voxel grid)를 조회하여",
+        "깊이 맵(depth map)에 대해 컨볼루션(convolution)을 실행하여"
+      ],
+      "correct": 1,
+      "explanation": "NeRF 렌더링은 신경 밀도 필드(neural density field)를 사용한 전통적인 체적 렌더링(volume rendering)입니다. 각 픽셀에 대해 광선을 선택하고, 광선을 따라 샘플링하며, 각 샘플에서 (시그마(sigma), 색상(c))을 질의한 후 (1 - exp(-sigma * delta)) 알파(alpha)와 누적 투과율(cumulative transmittance)을 사용해 합성합니다. 이 렌더링 단계를 통해 역전파(backprop)가 수행되며, 2D 사진으로부터 MLP가 학습됩니다. 명시적인 3D 감독(supervision)은 전혀 사용되지 않습니다."
+    },
+    {
+      "stage": "post",
+      "question": "3D 가우시안 스플래팅(3D Gaussian splatting)이 프로덕션 환경에서 NeRF를 크게 대체한 이유는 무엇인가요?",
+      "options": [
+        "더 높은 품질의 이미지를 생성하기 때문",
+        "명도와 색상을 가진 수백만 개의 3D 가우시안으로 구성된 명시적 표현(explicit representation)으로, 샘플링된 광선에 대한 MLP 쿼리 대신 래스터화(rasterisation)를 통해 실시간으로 렌더링되며, 훈련 시간은 수 시간 대신 수 분, 렌더링 속도는 100배 빠르고 품질은 비슷함",
+        "NeRF가 수학적으로 잘못되었다는 것이 증명되었기 때문",
+        "가우시안이 더 압축하기 쉽기 때문"
+      ],
+      "correct": 1,
+      "explanation": "3D 가우시안 스플래팅(SIGGRAPH 2023)은 암시적 MLP 기반 장면을 3D 가우시안 프리미티브의 명시적 클라우드로 대체합니다. 렌더링은 GPU 래스터화가 되어 MLP를 통한 픽셀별 광선 샘플링보다 훨씬 빠릅니다. 2026년 대부분의 NeRF 제품은 가우시안 스플래팅 또는 그 후속 기술을 탑재하며, NeRF 패러다임은 여전히 훈련 목표와 수학적 기반을 제공합니다."
+    }
+  ]
+}

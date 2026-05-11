@@ -8,7 +8,7 @@
   <meta name="description" content="AI Engineering from Scratch - Lesson Viewer">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20260424a">
   <style>
     .scroll-progress {
@@ -1913,7 +1913,8 @@
     mermaid.initialize({
       startOnLoad: false,
       theme: document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark',
-      fontFamily: 'Patrick Hand, cursive'
+      fontFamily: 'Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif',
+      flowchart: { htmlLabels: false }
     });
     window._mermaidReady = mermaid;
   </script>
@@ -2102,23 +2103,33 @@
       }
 
       function fetchLesson(path) {
-        var rawUrl = 'https://raw.githubusercontent.com/rohitg00/ai-engineering-from-scratch/main/' + path + '/docs/en.md';
-        var quizUrl = 'https://raw.githubusercontent.com/rohitg00/ai-engineering-from-scratch/main/' + path + '/quiz.json';
-        var lessonPromise = fetch(rawUrl).then(function (res) {
-          if (!res.ok) throw new Error('Not found');
-          return res.text();
+        var koUrl  = '/' + path + '/docs/ko.md';
+        var enUrl  = '/' + path + '/docs/en.md';
+        var quizKoUrl = '/' + path + '/quiz.ko.json';
+        var quizEnUrl = '/' + path + '/quiz.json';
+        var lessonPromise = fetch(koUrl).then(function (res) {
+          if (res.ok) return res.text();
+          return fetch(enUrl).then(function (res2) {
+            if (!res2.ok) throw new Error('Not found');
+            return res2.text();
+          });
         });
-        var quizPromise = fetch(quizUrl).then(function (res) {
-          if (!res.ok) return null;
-          return res.json();
+        var quizPromise = fetch(quizKoUrl).then(function (res) {
+          if (res.ok) return res.json();
+          return fetch(quizEnUrl).then(function (res2) {
+            if (!res2.ok) return null;
+            return res2.json();
+          });
         }).catch(function () { return null; });
 
         Promise.all([lessonPromise, quizPromise])
           .then(function (results) {
+            window._lessonQuizData = results[1] || null;
             renderLesson(results[0]);
             if (results[1]) renderQuiz(results[1]);
           })
-          .catch(function () {
+          .catch(function (err) {
+            console.error('fetchLesson failed:', err);
             showError('Lesson not found', 'Could not fetch the lesson at <code>' + escapeHtml(path) + '</code>. It may not have been written yet.');
           });
       }
@@ -2700,9 +2711,11 @@
         var check = setInterval(function () {
           if (!window._mermaidReady) return;
           clearInterval(check);
-          rerenderMermaidBlocks();
-          bindMermaidToolbar();
-          initMermaidModal();
+          document.fonts.ready.then(function () {
+            rerenderMermaidBlocks();
+            bindMermaidToolbar();
+            initMermaidModal();
+          });
         }, 100);
         setTimeout(function () { clearInterval(check); }, 10000);
       }
@@ -2714,7 +2727,7 @@
       function updateMermaidThemeAndRerender() {
         if (!window._mermaidReady) return;
         try {
-          window._mermaidReady.initialize({ startOnLoad: false, theme: mermaidTheme(), fontFamily: 'Patrick Hand, cursive' });
+          window._mermaidReady.initialize({ startOnLoad: false, theme: mermaidTheme(), fontFamily: 'Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif', flowchart: { htmlLabels: false } });
         } catch (_) {}
         rerenderMermaidBlocks();
         rerenderMermaidModal();
@@ -3225,69 +3238,82 @@
 
         if (pathLower.indexOf('math') >= 0 || pathLower.indexOf('linear-algebra') >= 0 || pathLower.indexOf('calculus') >= 0) {
           return [
-            { q: 'What does a dot product measure between two vectors?', opts: ['Their sum', 'How aligned they are', 'Their cross product', 'The distance between them'], answer: 1, explain: 'The dot product measures the similarity or alignment between two vectors. When it is zero, the vectors are orthogonal.' },
-            { q: 'What does the gradient of a function point toward?', opts: ['The minimum', 'The steepest ascent', 'The nearest saddle point', 'A random direction'], answer: 1, explain: 'The gradient always points in the direction of steepest increase. Gradient descent moves opposite to the gradient to find minima.' },
-            { q: 'A matrix with shape (3, 5) multiplied by (5, 2) produces what shape?', opts: ['(3, 2)', '(5, 5)', '(3, 5)', '(2, 3)'], answer: 0, explain: 'Matrix multiplication: (m, n) x (n, p) = (m, p). So (3, 5) x (5, 2) = (3, 2).' }
+            { q: '두 벡터의 내적(dot product)은 무엇을 측정하나요?', opts: ['두 벡터의 합', '두 벡터가 얼마나 정렬되어 있는지', '외적(cross product)', '두 벡터 사이의 거리'], answer: 1, explain: '내적(dot product)은 두 벡터의 유사도 또는 정렬 정도를 측정합니다. 값이 0이면 두 벡터는 직교(orthogonal)합니다.' },
+            { q: '함수의 그래디언트(gradient)는 어느 방향을 가리키나요?', opts: ['최솟값 방향', '가장 가파른 상승 방향', '가장 가까운 안장점(saddle point)', '임의의 방향'], answer: 1, explain: '그래디언트(gradient)는 항상 가장 가파른 증가 방향을 가리킵니다. 경사 하강법(gradient descent)은 그래디언트의 반대 방향으로 이동하여 최솟값을 찾습니다.' },
+            { q: '(3, 5) 형태의 행렬에 (5, 2) 행렬을 곱하면 결과 형태는?', opts: ['(3, 2)', '(5, 5)', '(3, 5)', '(2, 3)'], answer: 0, explain: '행렬 곱셈: (m, n) × (n, p) = (m, p). 따라서 (3, 5) × (5, 2) = (3, 2).' }
           ];
         }
 
         if (pathLower.indexOf('ml') >= 0 || pathLower.indexOf('regression') >= 0 || pathLower.indexOf('classification') >= 0 || pathLower.indexOf('supervised') >= 0) {
           return [
-            { q: 'What is the purpose of a loss function in machine learning?', opts: ['To generate data', 'To measure how wrong predictions are', 'To select features', 'To split data'], answer: 1, explain: 'A loss function quantifies the difference between predicted and actual values. The optimizer minimizes this value during training.' },
-            { q: 'Why do we split data into train and test sets?', opts: ['To save memory', 'To evaluate generalization on unseen data', 'To make training faster', 'To reduce the dataset size'], answer: 1, explain: 'The test set acts as unseen data, revealing whether the model memorized training data or learned generalizable patterns.' },
-            { q: 'What does overfitting mean?', opts: ['The model is too simple', 'The model memorizes training data but fails on new data', 'The model trains too slowly', 'The loss is too low'], answer: 1, explain: 'Overfitting occurs when a model performs well on training data but poorly on new data because it learned noise rather than signal.' }
+            { q: '머신러닝에서 손실 함수(loss function)의 목적은?', opts: ['데이터 생성', '예측이 얼마나 틀렸는지 측정', '특성(feature) 선택', '데이터 분할'], answer: 1, explain: '손실 함수(loss function)는 예측값과 실제값의 차이를 수치화합니다. 옵티마이저는 학습 중 이 값을 최소화합니다.' },
+            { q: '데이터를 훈련 세트와 테스트 세트로 분리하는 이유는?', opts: ['메모리 절약', '보지 못한 데이터에 대한 일반화 성능 평가', '훈련 속도 향상', '데이터셋 크기 축소'], answer: 1, explain: '테스트 세트는 모델이 본 적 없는 데이터 역할을 하며, 모델이 훈련 데이터를 외웠는지 아니면 일반화 가능한 패턴을 학습했는지 확인합니다.' },
+            { q: '과적합(overfitting)이란 무엇인가요?', opts: ['모델이 너무 단순함', '모델이 훈련 데이터를 외워 새 데이터에서 실패함', '모델 학습 속도가 너무 느림', '손실값이 너무 낮음'], answer: 1, explain: '과적합(overfitting)은 모델이 훈련 데이터에서는 잘 작동하지만 새 데이터에서는 성능이 저하되는 현상입니다. 신호가 아닌 노이즈를 학습했기 때문입니다.' }
           ];
         }
 
         if (pathLower.indexOf('deep-learning') >= 0 || pathLower.indexOf('neural') >= 0 || pathLower.indexOf('backprop') >= 0 || pathLower.indexOf('activation') >= 0) {
           return [
-            { q: 'What does backpropagation compute?', opts: ['Forward predictions', 'The gradient of the loss with respect to each weight', 'The learning rate', 'New training data'], answer: 1, explain: 'Backpropagation uses the chain rule to compute how much each weight contributed to the error, then adjusts weights accordingly.' },
-            { q: 'Why do neural networks need non-linear activation functions?', opts: ['To speed up training', 'Without them, stacking layers is equivalent to a single linear layer', 'To reduce memory usage', 'To normalize outputs'], answer: 1, explain: 'Without non-linearities, any composition of linear layers collapses to a single linear transformation. Activations like ReLU let the network learn complex patterns.' },
-            { q: 'What does the learning rate control?', opts: ['How many epochs to train', 'The size of each weight update step', 'The number of layers', 'The batch size'], answer: 1, explain: 'The learning rate scales the gradient update. Too large causes divergence, too small causes slow or stuck training.' }
+            { q: '역전파(backpropagation)는 무엇을 계산하나요?', opts: ['순전파 예측값', '각 가중치에 대한 손실의 그래디언트', '학습률(learning rate)', '새 훈련 데이터'], answer: 1, explain: '역전파(backpropagation)는 연쇄 법칙(chain rule)을 사용하여 각 가중치가 오차에 얼마나 기여했는지 계산하고 가중치를 조정합니다.' },
+            { q: '신경망에 비선형 활성화 함수(activation function)가 필요한 이유는?', opts: ['훈련 속도 향상', '없으면 여러 층을 쌓아도 단일 선형 층과 동일함', '메모리 사용 감소', '출력 정규화'], answer: 1, explain: '비선형성이 없으면 선형 층을 아무리 쌓아도 단일 선형 변환으로 수렴합니다. ReLU 같은 활성화 함수가 복잡한 패턴 학습을 가능하게 합니다.' },
+            { q: '학습률(learning rate)은 무엇을 제어하나요?', opts: ['학습할 에포크(epoch) 수', '각 가중치 업데이트 단계의 크기', '레이어 수', '배치 크기'], answer: 1, explain: '학습률(learning rate)은 그래디언트 업데이트의 크기를 조절합니다. 너무 크면 발산하고, 너무 작으면 학습이 느리거나 멈춥니다.' }
           ];
         }
 
         if (pathLower.indexOf('llm') >= 0 || pathLower.indexOf('transformer') >= 0 || pathLower.indexOf('attention') >= 0 || pathLower.indexOf('tokeniz') >= 0 || pathLower.indexOf('fine-tun') >= 0) {
           return [
-            { q: 'What does self-attention allow a transformer to do?', opts: ['Process tokens in order', 'Weight the importance of every token relative to every other token', 'Reduce vocabulary size', 'Compress the model'], answer: 1, explain: 'Self-attention computes pairwise relevance scores across all positions, allowing the model to relate distant tokens without recurrence.' },
-            { q: 'Why do LLMs use tokenizers instead of raw characters?', opts: ['Characters are too large', 'Tokens compress frequent patterns into single units, reducing sequence length', 'Tokenizers are faster to train', 'Characters cannot be embedded'], answer: 1, explain: 'Subword tokenizers like BPE balance vocabulary size against sequence length, making common words single tokens while handling rare words as pieces.' },
-            { q: 'What is the key difference between pre-training and fine-tuning?', opts: ['Pre-training uses labeled data', 'Pre-training learns general language; fine-tuning adapts to a specific task', 'Fine-tuning uses more data', 'There is no difference'], answer: 1, explain: 'Pre-training learns language patterns from massive unlabeled text. Fine-tuning takes that foundation and specializes it on smaller, task-specific data.' }
+            { q: '셀프 어텐션(self-attention)은 트랜스포머에 무엇을 가능하게 하나요?', opts: ['토큰을 순서대로 처리', '모든 토큰 간의 중요도를 상호 가중치로 계산', '어휘(vocabulary) 크기 축소', '모델 압축'], answer: 1, explain: '셀프 어텐션(self-attention)은 모든 위치 간의 쌍별 관련성 점수를 계산하여 순환(recurrence) 없이도 먼 위치의 토큰을 연결할 수 있게 합니다.' },
+            { q: 'LLM이 원시 문자 대신 토크나이저(tokenizer)를 사용하는 이유는?', opts: ['문자는 너무 큼', '토큰은 자주 나오는 패턴을 단일 단위로 압축하여 시퀀스 길이를 줄임', '토크나이저가 훈련이 더 빠름', '문자는 임베딩 불가'], answer: 1, explain: 'BPE 같은 서브워드 토크나이저는 어휘 크기와 시퀀스 길이 사이의 균형을 맞춰, 일반적인 단어는 단일 토큰으로, 희귀 단어는 조각으로 처리합니다.' },
+            { q: '사전 학습(pre-training)과 파인튜닝(fine-tuning)의 핵심 차이는?', opts: ['사전 학습은 레이블 데이터 사용', '사전 학습은 일반 언어를 학습하고, 파인튜닝은 특정 태스크에 적응', '파인튜닝이 더 많은 데이터 사용', '차이 없음'], answer: 1, explain: '사전 학습(pre-training)은 방대한 비레이블 텍스트에서 언어 패턴을 학습합니다. 파인튜닝(fine-tuning)은 그 기반을 더 작은 태스크별 데이터로 특화시킵니다.' }
           ];
         }
 
         if (pathLower.indexOf('rag') >= 0 || pathLower.indexOf('retrieval') >= 0 || pathLower.indexOf('embed') >= 0 || pathLower.indexOf('vector') >= 0) {
           return [
-            { q: 'What is the core idea behind RAG?', opts: ['Training a larger model', 'Retrieving relevant context before generating a response', 'Using more GPUs', 'Reducing model size'], answer: 1, explain: 'RAG (Retrieval-Augmented Generation) grounds LLM responses in retrieved documents, reducing hallucination and enabling knowledge updates without retraining.' },
-            { q: 'What do embedding models produce?', opts: ['Text summaries', 'Dense vector representations of text', 'Token counts', 'Grammar corrections'], answer: 1, explain: 'Embedding models map text into fixed-dimensional vectors where semantic similarity corresponds to geometric proximity.' },
-            { q: 'Why use cosine similarity for comparing embeddings?', opts: ['It is the only metric', 'It measures angular similarity regardless of vector magnitude', 'It is faster than dot product', 'It works with integers only'], answer: 1, explain: 'Cosine similarity normalizes for magnitude, focusing on direction. Two texts about the same topic will have high cosine similarity regardless of length.' }
+            { q: 'RAG의 핵심 아이디어는 무엇인가요?', opts: ['더 큰 모델 학습', '응답 생성 전에 관련 컨텍스트를 검색', '더 많은 GPU 사용', '모델 크기 축소'], answer: 1, explain: 'RAG(검색 증강 생성)는 검색된 문서를 기반으로 LLM 응답을 생성하여 환각(hallucination)을 줄이고 재학습 없이 지식을 업데이트할 수 있게 합니다.' },
+            { q: '임베딩(embedding) 모델은 무엇을 생성하나요?', opts: ['텍스트 요약', '텍스트의 밀집 벡터 표현', '토큰 개수', '문법 교정'], answer: 1, explain: '임베딩(embedding) 모델은 텍스트를 고정 차원 벡터로 매핑합니다. 의미적으로 유사한 텍스트는 벡터 공간에서 가까이 위치합니다.' },
+            { q: '임베딩 비교에 코사인 유사도(cosine similarity)를 사용하는 이유는?', opts: ['유일한 지표이기 때문', '벡터의 크기와 무관하게 방향의 유사도를 측정', '내적보다 빠름', '정수에만 작동'], answer: 1, explain: '코사인 유사도(cosine similarity)는 크기를 정규화하여 방향에만 집중합니다. 같은 주제의 두 텍스트는 길이와 관계없이 높은 코사인 유사도를 가집니다.' }
           ];
         }
 
         if (pathLower.indexOf('agent') >= 0 || pathLower.indexOf('tool') >= 0 || pathLower.indexOf('mcp') >= 0) {
           return [
-            { q: 'What distinguishes an AI agent from a simple chatbot?', opts: ['Agents are faster', 'Agents can take actions and use tools autonomously', 'Agents use bigger models', 'There is no difference'], answer: 1, explain: 'Agents have a loop: observe, decide, act. They can call tools, read files, search the web, and chain multiple steps to complete complex tasks.' },
-            { q: 'What is MCP (Model Context Protocol)?', opts: ['A model training format', 'A standardized protocol for connecting AI models to tools and data sources', 'A compression algorithm', 'A testing framework'], answer: 1, explain: 'MCP provides a universal interface between AI assistants and external tools/data, replacing one-off integrations with a standard protocol.' },
-            { q: 'Why is tool-use important for LLMs?', opts: ['It reduces cost', 'It lets LLMs access real-time information and take actions beyond text generation', 'It makes responses shorter', 'It removes hallucinations entirely'], answer: 1, explain: 'Tools extend LLMs beyond their training data cutoff, enabling real-time lookups, calculations, code execution, and interaction with external systems.' }
+            { q: 'AI 에이전트(agent)와 단순 챗봇의 차이는?', opts: ['에이전트가 더 빠름', '에이전트는 자율적으로 행동하고 도구를 사용할 수 있음', '에이전트는 더 큰 모델 사용', '차이 없음'], answer: 1, explain: '에이전트(agent)는 관찰-결정-행동 루프를 가집니다. 도구 호출, 파일 읽기, 웹 검색, 여러 단계를 연결하여 복잡한 태스크를 완수할 수 있습니다.' },
+            { q: 'MCP(Model Context Protocol)란 무엇인가요?', opts: ['모델 학습 형식', 'AI 모델을 도구 및 데이터 소스에 연결하는 표준 프로토콜', '압축 알고리즘', '테스트 프레임워크'], answer: 1, explain: 'MCP는 AI 어시스턴트와 외부 도구/데이터 간의 범용 인터페이스를 제공하여 개별 통합을 표준 프로토콜로 대체합니다.' },
+            { q: 'LLM에게 도구 사용(tool-use)이 중요한 이유는?', opts: ['비용 절감', 'LLM이 실시간 정보에 접근하고 텍스트 생성 이상의 행동을 할 수 있게 함', '응답 길이 단축', '환각을 완전히 제거'], answer: 1, explain: '도구(tool)는 LLM의 학습 데이터 커트오프를 넘어서 실시간 조회, 계산, 코드 실행, 외부 시스템 상호작용을 가능하게 합니다.' }
           ];
         }
 
         if (pathLower.indexOf('eval') >= 0 || pathLower.indexOf('safety') >= 0 || pathLower.indexOf('alignment') >= 0 || pathLower.indexOf('deploy') >= 0) {
           return [
-            { q: 'Why are evals critical for production AI systems?', opts: ['To save money', 'To measure performance objectively before and after changes', 'To make the model bigger', 'Evals are optional'], answer: 1, explain: 'Evals are the tests of AI engineering. Without them, you cannot know if a change improved or regressed quality. They should run on every code change.' },
-            { q: 'What does "alignment" mean in AI safety?', opts: ['Aligning text on screen', 'Ensuring AI systems act according to human intentions and values', 'Making models faster', 'Using the same training data'], answer: 1, explain: 'Alignment ensures that as AI systems become more capable, they remain helpful, honest, and harmless, acting in accordance with human goals.' },
-            { q: 'What is a guardrail in the context of deployed LLMs?', opts: ['A physical barrier', 'A check that prevents harmful, off-topic, or policy-violating outputs', 'A backup model', 'A caching layer'], answer: 1, explain: 'Guardrails filter inputs and outputs at runtime, catching toxicity, prompt injection, PII leaks, and other risks before they reach the user.' }
+            { q: '프로덕션 AI 시스템에서 평가(eval)가 중요한 이유는?', opts: ['비용 절감', '변경 전후 성능을 객관적으로 측정', '모델 크기 증가', '평가는 선택 사항'], answer: 1, explain: '평가(eval)는 AI 엔지니어링의 테스트입니다. 평가 없이는 변경이 품질을 개선했는지 저하했는지 알 수 없습니다. 모든 코드 변경 시 실행해야 합니다.' },
+            { q: 'AI 안전(safety)에서 "정렬(alignment)"이란 무엇인가요?', opts: ['화면의 텍스트 정렬', 'AI 시스템이 인간의 의도와 가치에 따라 행동하도록 보장', '모델 속도 향상', '동일한 학습 데이터 사용'], answer: 1, explain: '정렬(alignment)은 AI 시스템이 더 강력해질수록 인간의 목표에 맞게 유용하고, 정직하며, 무해하게 유지되도록 보장합니다.' },
+            { q: '배포된 LLM에서 가드레일(guardrail)이란?', opts: ['물리적 장벽', '유해하거나 정책을 위반하는 출력을 방지하는 검사', '백업 모델', '캐싱 레이어'], answer: 1, explain: '가드레일(guardrail)은 런타임에 입력과 출력을 필터링하여 독성, 프롬프트 인젝션, PII 유출 등을 사용자에게 전달되기 전에 차단합니다.' }
           ];
         }
 
         return [
-          { q: 'What does "from scratch" mean in this course?', opts: ['Using no computer', 'Building each concept by implementing it yourself, not just reading theory', 'Starting from assembly language', 'Only using pen and paper'], answer: 1, explain: 'This course follows a Build-Use-Ship methodology: first understand by building it, then apply it, then ship it as a real artifact.' },
-          { q: 'Why does this course combine math, ML, and engineering?', opts: ['To make it longer', 'Because real AI engineering requires all three to build production systems', 'Math is just for fun', 'Engineering is optional'], answer: 1, explain: 'Production AI systems require mathematical foundations (for understanding), ML knowledge (for modeling), and engineering skills (for deployment and reliability).' },
-          { q: 'What is the "Ship" step in the Build-Use-Ship framework?', opts: ['Mailing physical goods', 'Creating a reusable artifact like a prompt, skill, or tool from what you learned', 'Publishing a paper', 'Deleting your code'], answer: 2, explain: 'The Ship step turns your learning into something tangible: a prompt, skill file, MCP tool, or CLI utility that others (or future you) can use immediately.' }
+          { q: '이 강의에서 "처음부터(from scratch)"의 의미는?', opts: ['컴퓨터 없이', '이론만 읽는 것이 아니라 직접 구현하며 각 개념을 이해', '어셈블리어부터 시작', '펜과 종이만 사용'], answer: 1, explain: '이 과정은 만들기-사용하기-출시하기(Build-Use-Ship) 방법론을 따릅니다: 먼저 직접 만들어 이해하고, 적용하고, 실제 결과물로 출시합니다.' },
+          { q: '이 과정이 수학, ML, 엔지니어링을 결합하는 이유는?', opts: ['과정을 길게 만들려고', '실제 AI 엔지니어링에는 프로덕션 시스템 구축을 위해 세 가지 모두 필요하기 때문', '수학은 재미를 위해', '엔지니어링은 선택 사항'], answer: 1, explain: '프로덕션 AI 시스템에는 수학적 기반(이해), ML 지식(모델링), 엔지니어링 기술(배포 및 신뢰성)이 모두 필요합니다.' },
+          { q: 'Build-Use-Ship 프레임워크에서 "출시(Ship)" 단계는?', opts: ['물건을 택배로 발송', '학습한 내용으로 프롬프트, 스킬, 도구 같은 재사용 가능한 결과물 만들기', '논문 출판', '코드 삭제'], answer: 2, explain: '출시(Ship) 단계는 학습을 구체적인 결과물로 전환합니다: 프롬프트, 스킬 파일, MCP 도구, CLI 유틸리티 등 다른 사람(또는 미래의 자신)이 바로 사용할 수 있는 것들입니다.' }
         ];
       }
 
+      function getQuizQuestionsFromData(data) {
+        var list = data.questions || data;
+        if (!list || !list.length) return null;
+        var mapped = list.map(function (q) {
+          return { q: q.question, opts: q.options, answer: q.correct, explain: q.explanation };
+        });
+        // pre 먼저, post 나중 순으로 최대 5개
+        var pre  = mapped.filter(function (_, i) { return list[i].stage === 'pre'; });
+        var post = mapped.filter(function (_, i) { return list[i].stage === 'post'; });
+        var combined = pre.concat(post).slice(0, 5);
+        return combined.length ? combined : mapped.slice(0, 5);
+      }
+
       function renderQuizPanel(container) {
-        var questions = getQuizQuestions();
+        var questions = (window._lessonQuizData && getQuizQuestionsFromData(window._lessonQuizData)) || getQuizQuestions();
         var panel = document.createElement('div');
         panel.className = 'ai-panel';
 
@@ -3297,14 +3323,14 @@
           phase = fl.phaseSlug || '';
         }
 
-        var html = '<div class="ai-panel-header"><div class="ai-panel-icon green">\u{1F9E0}</div><div class="ai-panel-title">Test Your Understanding</div></div>';
-        html += '<div class="ai-panel-subtitle">Did you get it?</div>';
+        var html = '<div class="ai-panel-header"><div class="ai-panel-icon green">\u{1F9E0}</div><div class="ai-panel-title">이해도 확인</div></div>';
+        html += '<div class="ai-panel-subtitle">제대로 이해했나요?</div>';
         html += '<div class="quiz-container" id="quizContainer">';
 
         var letters = ['A', 'B', 'C', 'D'];
         questions.forEach(function (q, qi) {
           html += '<div class="quiz-question" id="quiz-q-' + qi + '">';
-          html += '<div class="quiz-question-num">Question ' + (qi + 1) + ' of ' + questions.length + '</div>';
+          html += '<div class="quiz-question-num">질문 ' + (qi + 1) + ' / ' + questions.length + '</div>';
           html += '<div class="quiz-question-text">' + escapeHtml(q.q) + '</div>';
           html += '<div class="quiz-options">';
           q.opts.forEach(function (opt, oi) {
@@ -3318,8 +3344,8 @@
           html += '</div>';
         });
 
-        html += '<div class="quiz-score" id="quizScore"><div class="quiz-score-number" id="quizScoreNum">0/' + questions.length + '</div><div class="quiz-score-label">Complete all questions to see your score</div></div>';
-        html += '<div class="quiz-deeper">Want a deeper quiz? Run <code>/check-understanding ' + escapeHtml(phase) + '</code> in Claude Code</div>';
+        html += '<div class="quiz-score" id="quizScore"><div class="quiz-score-number" id="quizScoreNum">0/' + questions.length + '</div><div class="quiz-score-label">모든 문제를 풀면 점수를 확인할 수 있습니다</div></div>';
+        html += '<div class="quiz-deeper">더 깊은 퀴즈를 원하시나요? Claude Code에서 <code>/check-understanding ' + escapeHtml(phase) + '</code> 를 실행하세요</div>';
         html += '</div>';
 
         panel.innerHTML = html;
@@ -3363,8 +3389,8 @@
           if (scoreEl && scoreNum) {
             scoreNum.textContent = window._quizCorrect + '/' + questions.length;
             scoreEl.querySelector('.quiz-score-label').textContent =
-              window._quizCorrect === questions.length ? 'Perfect score!' :
-              window._quizCorrect >= 2 ? 'Great work!' : 'Keep studying!';
+              window._quizCorrect === questions.length ? '완벽합니다!' :
+              window._quizCorrect >= 2 ? '잘 했어요!' : '조금 더 공부해봐요!';
             scoreEl.classList.add('visible');
           }
         }

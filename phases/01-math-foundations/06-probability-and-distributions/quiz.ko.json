@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "확률 질량 함수(PMF)와 확률 밀도 함수(PDF)의 차이점은 무엇인가요?",
+      "options": [
+        "PMF는 연속 변수에 사용되고, PDF는 이산 변수에 사용됩니다",
+        "PMF는 이산 결과에 대한 정확한 확률을 제공하고, PDF는 연속 변수에 대한 밀도를 제공하며, 확률을 얻으려면 구간에 대해 적분해야 합니다",
+        "차이가 없습니다; 이름만 다른 동일한 개념입니다",
+        "PMF는 항상 0.5로 합산되고, PDF는 1로 적분됩니다"
+      ],
+      "correct": 1,
+      "explanation": "이산 변수의 경우 PMF는 P(X=k)를 직접 제공합니다. 연속 변수의 경우 PDF f(x)는 밀도 함수입니다. P(a≤X≤b)를 구하려면 a부터 b까지 f(x)를 적분해야 합니다. 단일 지점에서의 밀도는 확률이 아닙니다."
+    },
+    {
+      "stage": "pre",
+      "question": "중심 극한 정리(Central Limit Theorem)는 무엇을 설명하나요?",
+      "options": [
+        "모든 데이터는 정규 분포(normal distribution)를 따른다",
+        "많은 독립적인 무작위 표본의 평균(mean)은 원본 분포(source distribution)와 관계없이 정규 분포(normal distribution)로 수렴한다",
+        "대규모 데이터셋은 항상 낮은 분산(variance)을 가진다",
+        "표본 크기(sample size)가 증가할수록 희귀 사건(rare events)의 확률(probability)이 감소한다"
+      ],
+      "correct": 1,
+      "explanation": "중심 극한 정리(CLT)는 많은 독립적인 확률 변수(random variables)의 평균(mean)이 원래 분포(original distribution)의 형태와 상관없이 가우시안 분포(Gaussian)로 근접함을 의미합니다. 이는 정규 분포(normal distribution)가 다양한 분야에서 관측되는 이유를 설명합니다."
+    },
+    {
+      "stage": "post",
+      "question": "소프트맥스가 지수 함수 적용 전 최대 로짓 값을 빼는 이유('소프트맥스 트릭')는 무엇인가요?",
+      "options": [
+        "모든 확률을 동일하게 만들기 위해",
+        "큰 수의 지수 연산으로 인한 수치적 오버플로우를 방지하면서 수학적으로 동일한 결과를 생성하기 위해",
+        "로짓을 평균 0으로 정규화하기 위해",
+        "지수 연산 횟수를 줄여 계산 속도를 높이기 위해"
+      ],
+      "correct": 1,
+      "explanation": "exp(100)은 무한대로 오버플로우됩니다. max(logits)를 빼면 모든 값이 가장 큰 값이 0이 되도록 이동합니다. exp(0)=1은 안전합니다. 이 뺄셈은 정규화 과정에서 상쇄되어 동일한 확률을 제공합니다."
+    },
+    {
+      "stage": "post",
+      "question": "분류(classification)를 위한 크로스-엔트로피 손실(cross-entropy loss)은 -log(q(true_class))로 단순화됩니다. 이는 직관적으로 어떤 의미인가요?",
+      "options": [
+        "예측된 확률(predicted probabilities)을 실제 레이블(true labels)과 곱한다",
+        "모델이 정답 클래스(correct class)에 대해 예측한 확률이 낮을수록 더 큰 패널티를 부과한다 -- 예측이 낮을수록 손실이 커진다",
+        "모든 클래스(all classes)에 걸쳐 로그 확률(log probabilities)을 평균화한다",
+        "실제 분포(true distribution)의 엔트로피(entropy)를 계산한다"
+      ],
+      "correct": 1,
+      "explanation": "모델이 정답 클래스에 대해 0.9를 예측하면 손실 = -log(0.9) = 0.105(낮음). 0.01을 예측하면 손실 = -log(0.01) = 4.6(높음). 손실은 정답에 대한 낮은 신뢰도(low confidence)를 처벌한다."
+    },
+    {
+      "stage": "post",
+      "question": "언어 모델이 원시 확률 대신 로그 확률(log probability)을 사용하는 이유는 무엇인가요?",
+      "options": [
+        "로그 확률은 시각적으로 해석하기 더 쉽다",
+        "많은 작은 확률을 곱하면 수치적 언더플로(numerical underflow)가 발생해 0이 되는데, 로그 확률은 곱을 합으로 변환해 이를 방지한다",
+        "트랜스포머(Transformer) 아키텍처에서 로그 확률이 필수적으로 요구된다",
+        "원시 확률은 0.01 미만의 값을 표현할 수 없다"
+      ],
+      "correct": 1,
+      "explanation": "P(sentence) = P(word1) * P(word2) * ...는 float64에서 빠르게 0.0으로 언더플로된다. 반면 log P(sentence) = log P(word1) + log P(word2) + ...는 유한한 범위 내에 유지된다. 곱셈이 덧셈으로 변환되기 때문이다."
+    }
+  ]
+}

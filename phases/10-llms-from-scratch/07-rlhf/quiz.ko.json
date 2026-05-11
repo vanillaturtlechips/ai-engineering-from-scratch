@@ -1,0 +1,62 @@
+[
+  {
+    "question": "RLHF에서 보상 모델(reward model)은 무엇을 학습하나요?",
+    "options": [
+      "원시 텍스트 문서(raw text documents)",
+      "인간 선호도 쌍(human preference pairs): 동일한 프롬프트에 대한 두 응답 중 인간이 선호한 응답",
+      "벤치마크 점수(benchmark scores)",
+      "모델 손실 곡선(model loss curves)"
+    ],
+    "correct": 1,
+    "explanation": "보상 모델은 선호도 데이터(preference data)로 훈련됩니다: 동일한 프롬프트에 대한 두 응답 쌍에서 인간이 더 나은 응답을 라벨링한 데이터입니다. 인간 선호도와 일치하는 응답에 더 높은 점수를 부여하도록 학습합니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "PPO 훈련에서 RLHF에 KL 발산(KL divergence) 패널티가 사용되는 이유는 무엇인가요?",
+    "options": [
+      "훈련 속도를 높이기 위해",
+      "정책이 SFT 모델에서 너무 멀어지지 않도록 방지하여 보상 해킹(reward hacking)을 방지하기 위해",
+      "메모리 사용량을 줄이기 위해",
+      "토큰화(tokenization)를 개선하기 위해"
+    ],
+    "correct": 1,
+    "explanation": "KL 패널티가 없으면 모델은 보상 점수를 최대화하기 위해 퇴행적인 방법(예: 보상 모델의 약점을 악용하는 반복적인 텍스트 생성)을 찾습니다. KL 패널티는 모델이 잘 동작하는 SFT 베이스라인에 가깝게 유지되도록 합니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "RLHF 파이프라인을 완성하는 데 필요한 별도의 모델 수는 몇 개인가요?",
+    "options": [
+      "하나",
+      "둘",
+      "셋: SFT 모델, 보상 모델, 최적화되는 정책 모델",
+      "넷"
+    ],
+    "correct": 2,
+    "explanation": "RLHF에는 (1) 시작점 및 KL 참조로 사용되는 SFT 모델, (2) 선호도 데이터로 학습된 보상 모델, (3) PPO로 최적화되는 정책 모델이 필요합니다. 이러한 복잡성 때문에 DPO(레슨 08)가 개발되었습니다.",
+    "stage": "post"
+  },
+  {
+    "question": "RLHF에서 '보상 해킹(reward hacking)'이란 무엇인가요?",
+    "options": [
+      "보상 모델이 적대적 공격을 받을 때",
+      "정책이 실제 응답 품질을 개선하지 않으면서 보상 점수를 최대화하는 방법을 찾을 때",
+      "훈련 데이터가 손상되었을 때",
+      "학습률(learning rate)이 너무 높을 때"
+    ],
+    "correct": 1,
+    "explanation": "보상 모델은 인간 판단을 위한 불완전한 대리 지표입니다. 정책은 실제로 더 도움이 되지 않으면서도 높은 보상 점수를 얻는 패턴(예: 장황한 응답, 과도한 회피 표현)을 발견할 수 있습니다. KL 페널티(KL penalty)는 이를 제한합니다.",
+    "stage": "post"
+  },
+  {
+    "question": "PPO의 클리핑 메커니즘은 무엇을 방지하나요?",
+    "options": [
+      "기울기 오버플로우(gradient overflow)",
+      "훈련을 불안정하게 만들 수 있는 지나치게 큰 정책 업데이트",
+      "메모리 오버플로우(memory overflow)",
+      "데이터 누수(data leakage)"
+    ],
+    "correct": 1,
+    "explanation": "PPO는 새로운 정책과 이전 정책 간의 확률 비율(probability ratio)을 [0.8, 1.2]와 같은 범위로 클리핑합니다. 이는 단일 업데이트가 정책을 지나치게 급격하게 변경하는 것을 방지하여, 순수 정책 경사(vanilla policy gradient)보다 훈련을 더 안정적으로 만듭니다.",
+    "stage": "post"
+  }
+]

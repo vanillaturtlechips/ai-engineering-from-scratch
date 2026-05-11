@@ -1,0 +1,54 @@
+{
+  "questions": [
+    {
+      "q": "MCP 서버는 어떤 세 가지 기본 요소(primitives)를 노출하나요?",
+      "choices": [
+        "함수(Functions), 타입(Types), 클래스(Classes)",
+        "도구(Tools), 리소스(Resources), 프롬프트(Prompts)",
+        "엔드포인트(Endpoints), 웹훅(Webhooks), 큐(Queues)",
+        "에이전트(Agents), 스킬(Skills), 워크플로우(Workflows)"
+      ],
+      "answer": 1
+    },
+    {
+      "q": "MCP는 어떤 와이어 포맷을 사용하나요?",
+      "choices": [
+        "HTTP를 통한 GraphQL",
+        "protobuf를 사용한 gRPC",
+        "JSON-RPC 2.0",
+        "OpenAPI를 사용한 REST"
+      ],
+      "answer": 2
+    },
+    {
+      "q": "어떤 메타데이터 필드가 도구가 상태를 변경(mutate)하며 인간 승인이 필요함을 신호하나요?",
+      "choices": [
+        "readonly: false",
+        "mutating: true",
+        "destructiveHint: true",
+        "requiresAuth: true"
+      ],
+      "answer": 2
+    },
+    {
+      "q": "2025-06-18에 이전 SSE 전용 원격 전송을 대체한 전송 방식은 무엇인가요?",
+      "choices": [
+        "WebTransport",
+        "Streamable HTTP",
+        "WebSocket-only",
+        "gRPC bidi"
+      ],
+      "answer": 1
+    },
+    {
+      "q": "도구를 인라인 상태로 유지하지 않고 별도의 MCP 서버로 분리해야 하는 경우는 언제인가요?",
+      "choices": [
+        "하루에 10번 미만으로 호출될 때",
+        "두 개 이상의 호스트에서 호출되며 읽기 전용/캐시 가능한 경우",
+        "1KB 이상의 데이터를 반환할 때",
+        "절대 분리하지 않음; MCP는 로컬 개발용만 해당"
+      ],
+      "answer": 1
+    }
+  ]
+}

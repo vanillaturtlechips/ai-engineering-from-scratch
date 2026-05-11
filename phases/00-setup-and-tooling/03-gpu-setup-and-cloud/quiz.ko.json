@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "신경망 훈련 시 GPU가 CPU보다 빠른 이유는 무엇인가요?",
+      "options": [
+        "GPU는 CPU보다 클럭 속도가 더 높습니다",
+        "GPU는 수천 개의 병렬 행렬 연산을 동시에 수행할 수 있습니다",
+        "GPU는 CPU보다 더 많은 RAM을 가지고 있습니다",
+        "GPU는 더 효율적인 프로그래밍 언어를 사용합니다"
+      ],
+      "correct": 1,
+      "explanation": "GPU는 병렬 계산에 최적화된 수천 개의 코어를 가지고 있어 신경망 훈련에서 주로 발생하는 행렬 곱셈 연산에 적합합니다."
+    },
+    {
+      "stage": "pre",
+      "question": "VRAM은 무엇을 의미하나요?",
+      "options": [
+        "운영 체제에서 스왑 공간으로 사용하는 가상 RAM",
+        "시스템 RAM과 분리된 GPU의 비디오 RAM",
+        "모든 장치에서 사용 가능한 총 RAM",
+        "CPU 캐시 메모리의 한 종류"
+      ],
+      "correct": 1,
+      "explanation": "VRAM(Video RAM)은 GPU에 탑재된 전용 메모리입니다. 이는 시스템 메인 RAM과 분리되어 있으며, 학습 시 사용할 수 있는 모델 크기와 배치 크기의 상한을 결정합니다."
+    },
+    {
+      "stage": "post",
+      "question": "NVIDIA GPU가 감지되었는지 확인하고 현재 상태를 표시하는 명령어는 무엇인가요?",
+      "options": [
+        "gpu --status",
+        "nvidia-smi",
+        "torch.cuda.list_devices()",
+        "lspci | grep gpu"
+      ],
+      "correct": 1,
+      "explanation": "nvidia-smi(NVIDIA 시스템 관리 인터페이스)는 GPU 사용률, 메모리 사용량, 온도, 실행 중인 프로세스를 표시합니다. GPU 가용성을 확인하는 표준 도구입니다."
+    },
+    {
+      "stage": "post",
+      "question": "GPU와 CPU 행렬 곱셈 벤치마킹 시 torch.cuda.synchronize()를 GPU 시간 측정 전에 호출해야 하는 이유는 무엇인가요?",
+      "options": [
+        "CPU에서 GPU 메모리로 데이터를 전송하기 위해",
+        "타이머를 중지하기 전에 모든 GPU 연산이 완료되었는지 확인하기 위해",
+        "GPU 클럭 속도를 기본 주파수로 재설정하기 위해",
+        "사용하지 않는 GPU 메모리를 해제하기 위해"
+      ],
+      "correct": 1,
+      "explanation": "GPU 연산은 비동기식입니다. 즉, Python은 GPU가 여전히 계산 중일 때 즉시 반환됩니다. synchronize()는 모든 GPU 연산이 완료될 때까지 블록하여 정확한 타이밍 측정을 보장합니다."
+    },
+    {
+      "stage": "post",
+      "question": "fp16 경험 법칙을 사용할 때, 24GB VRAM에 약 몇 개의 파라미터를 저장할 수 있나요?",
+      "options": [
+        "240억 개 파라미터",
+        "120억 개 파라미터",
+        "60억 개 파라미터",
+        "480억 개 파라미터"
+      ],
+      "correct": 1,
+      "explanation": "fp16에서는 각 파라미터가 2바이트를 사용합니다. 24GB / 2바이트 = 120억 개 파라미터. 이는 대략적인 추정치이며, 실제 사용량은 활성화 값(activations), 그래디언트(gradients), 옵티마이저 상태(optimizer states) 등을 포함합니다."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "3D 가우시안 스플래팅(3D Gaussian Splatting)이 2026년까지 사실적인 장면 재구성(photorealistic scene reconstruction)의 프로덕션 기본 방식으로 NeRF(Neural Radiance Fields)를 대체한 주된 이유는 무엇인가요?",
+      "options": [
+        "가우시안 스플래팅은 모든 경우에 NeRF보다 더 높은 이미지 품질을 생성합니다",
+        "3DGS는 명시적(explicit)입니다(픽셀당 MLP 없음): 렌더링은 100+ fps의 GPU 래스터화(rasterisation)로 이루어지며, 훈련 시간은 수 시간 대신 수 분이 소요되고, 장면 편집이 가능하며, Khronos와 OpenUSD가 2026년에 이를 표준화했습니다",
+        "NeRF는 연구 기록에서 철회되었습니다",
+        "PyTorch가 NeRF 연산자 지원을 중단했습니다"
+      ],
+      "correct": 1,
+      "explanation": "3DGS는 암시적 MLP를 수백만 개의 명시적 3D 가우시안으로 대체합니다. 렌더링은 GPU가 소비자 하드웨어에서 100+ fps로 실행하는 정렬된 알파 합성(sorted alpha compositing)이 됩니다. 훈련은 수 분 내에 완료됩니다. 모든 가우시안은 편집 가능합니다. 2026년까지 Khronos는 3DGS를 위한 glTF 확장(glTF extension)을 승인했고, OpenUSD 26.03은 네이티브 스키마(native schema)를 출시하여 3DGS를 휴대 가능한 프로덕션 포맷으로 전환했습니다."
+    },
+    {
+      "stage": "pre",
+      "question": "장면 내 3D 가우시안이 위치(position), 회전(rotation), 크기(scale), 불투명도(opacity)와 함께 반사광(specular highlights)과 같은 시야 의존적 색상(view-dependent colour)을 처리하기 위해 추가로 저장하는 표현은 무엇인가요?",
+      "options": [
+        "두 번째 RGB 텍스처",
+        "가우시안당 작은 MLP",
+        "구면 조화 함수(spherical harmonics) 계수: 3차까지일 경우 색상 채널당 16개 계수, 렌더링 시 시야 방향(viewing direction)에 대해 평가됨",
+        "라이트 프로브 큐브맵(light probe cubemap)"
+      ],
+      "correct": 2,
+      "explanation": "구면 조화 함수(spherical harmonics)는 구면 상의 푸리에 기저(Fourier basis)입니다. 각 가우시안은 시야 방향에 따라 색상이 어떻게 변하는지 인코딩하는 학습된 SH 계수를 저장합니다. 렌더링 시 픽셀에서 가우시안 중심까지의 단위 벡터에 대해 계수를 평가하여 텍스처나 MLP 없이도 반사광, 약한 반사, 시야 의존적 음영을 구현합니다."
+    },
+    {
+      "stage": "post",
+      "question": "3DGS 훈련 중 densification에는 'clone'과 'split' 작업이 포함됩니다. 각각을 트리거하는 것은 무엇인가요?",
+      "options": [
+        "아무것도 없음 — 가우시안은 초기화 후 고정됨",
+        "작은 스케일에서 높은 기울기(gradient) 크기는 clone을 트리거(더 많은 로컬 디테일 필요); 큰 스케일에서 높은 기울기는 split을 트리거(하나의 가우시안이 너무 부드러워서 영역에 적합하지 않음). 임계값 미만의 불투명도(opacity)는 pruning을 트리거",
+        "마지막 체크포인트 이후 경과 시간",
+        "매 epoch 동안 무작위 샘플링"
+      ],
+      "correct": 1,
+      "explanation": "적응형 densification은 3DGS가 초기 SfM 기반 가우시안 ~100K개에서 수렴 시 1-5M개로 성장할 수 있게 합니다. Clone은 미해결된 작은 가우시안을 복제하고, split은 과도하게 큰 가우시안을 두 개의 작은 가우시안으로 분할하며, prune은 시그모이드 불투명도가 임계값 아래로 감소한 가우시안을 제거합니다. 이 세 가지 작업과 파라미터에 대한 기울기 하강법이 전체 훈련 동역학을 구성합니다."
+    },
+    {
+      "stage": "post",
+      "question": "NeRF와 3DGS 모두에서 한 픽셀에 대한 색상 방정식은 `C = sum_i alpha_i * T_i * c_i`이며, 여기서 `T_i = prod_{j<i}(1 - alpha_j)`입니다. 이 공유 방정식은 두 방법에 대해 무엇을 말해주나요?",
+      "options": [
+        "수학적으로 모든 면에서 동일하다",
+        "둘 다 동일한 체적 렌더링 방정식을 통합한다. 차이점은 표현 방식(암시적 MLP 샘플링 vs 명시적 희소 가우시안)과 렌더링 절차(레이 마칭 vs 래스터화)에만 있다. — 이것이 이미지 품질이 비슷한 이유이다",
+        "NeRF가 엄격하게 더 우수하다",
+        "3DGS가 엄격하게 더 우수하다"
+      ],
+      "correct": 1,
+      "explanation": "공유된 방정식은 고전적인 체적 렌더링 방정식이다. NeRF는 레이를 따라 샘플링하고 MLP를 쿼리하여 이를 평가한다. 3DGS는 가우시안을 2D로 투영하고 픽셀당 정렬된 프리미티브에 알파 컴포지팅을 적용하여 평가한다. 동일한 물리 법칙, 동일한 손실 함수, 다른 데이터 구조와 렌더링 알고리즘이다. 이 동일성 때문에 최종 PSNR / LPIPS가 유사하게 나타난다. 실제 차이는 속도와 편집 가능성에 있다."
+    },
+    {
+      "stage": "post",
+      "question": "2026년에 언리얼 엔진(Unreal Engine), 비전 프로(Vision Pro), 블렌더(Blender), 쓰리.js(Three.js) 웹 뷰어 간에 3DGS 장면을 전송하려고 합니다. 어떤 내보내기 형식이 가장 안전한 선택일까요?",
+      "options": [
+        "Raw `.ply` 단독 사용",
+        "KHR_gaussian_splatting 확장(Khronos RC 2026년 2월)이 적용된 glTF 및/또는 UsdVolParticleField3DGaussianSplat이 포함된 OpenUSD 26.03; 이 두 형식은 2026년에 승인된 표준 형식입니다",
+        "뷰어별 사용자 정의 바이너리 블롭",
+        "3D 가우시안의 PNG 스트립"
+      ],
+      "correct": 1,
+      "explanation": "2024년까지는 모든 뷰어가 자체 형식을 사용했습니다. Khronos는 2026년 2월 glTF용 KHR_gaussian_splatting을 승인했고, OpenUSD 26.03은 2026년 4월 네이티브 3DGS 스키마를 추가했습니다. 이 중 하나로 내보내면 엔진, 뷰어, 파이프라인 간 이식성이 보장됩니다. `.ply`는 연구용 교환 형식으로는 여전히 널리 사용되지만 구조적 체계가 부족합니다. 크로스 툴 프로덕션에는 glTF + USD가 2026년의 정답입니다."
+    }
+  ]
+}

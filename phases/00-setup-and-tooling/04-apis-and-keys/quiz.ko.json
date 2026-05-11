@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "LLM 서비스를 호출할 때 API 키는 어떤 용도로 사용되나요?",
+      "options": [
+        "서버로 전송되는 데이터 암호화",
+        "사용자 인증 및 요청 권한 부여",
+        "대역폭 절감을 위한 요청 압축",
+        "서버가 사용할 프로그래밍 언어 선택"
+      ],
+      "correct": 1,
+      "explanation": "API 키는 계정을 식별하고 요청을 승인하며, 제공자가 사용량과 과금을 추적할 수 있게 하는 고유한 문자열입니다."
+    },
+    {
+      "stage": "pre",
+      "question": "API 키를 소스 코드에 직접 하드코딩하면 안 되는 이유는 무엇인가요?",
+      "options": [
+        "하드코딩된 키는 코드 실행 속도를 느리게 만듭니다",
+        "실수로 git에 커밋되어 공개적으로 노출될 수 있습니다",
+        "파이썬은 50자 이상의 문자열 리터럴을 읽을 수 없습니다",
+        "API 제공업체는 소스 파일에 나타나는 키를 차단합니다"
+      ],
+      "correct": 1,
+      "explanation": "소스 코드에 하드코딩된 키는 버전 관리에 커밋되어 공개 저장소에 푸시될 위험이 있으며, 이 경우 다른 사람들이 이를 스크랩하여 악용할 수 있습니다."
+    },
+    {
+      "stage": "post",
+      "question": "로컬 개발 시 API 키를 저장하는 권장 방법은 무엇인가요?",
+      "options": [
+        "스크립트 상단의 Python 변수에 저장",
+        ".gitignore에 등록된 .env 파일에 저장",
+        "쉬운 접근을 위해 README.md에 저장",
+        "패키지 버전과 함께 requirements.txt에 저장"
+      ],
+      "correct": 1,
+      "explanation": ".env 파일은 키를 환경 변수로 저장하며, .gitignore에 추가해 버전 관리에 커밋되지 않도록 해야 합니다. SDK는 자동으로 환경 변수에서 키를 읽어옵니다."
+    },
+    {
+      "stage": "post",
+      "question": "Anthropic의 raw HTTP API 호출에서 API 키를 전달하는 헤더는 무엇인가요?",
+      "options": [
+        "Authorization: Bearer sk-ant-...",
+        "x-api-key: sk-ant-...",
+        "Content-Type: application/json",
+        "anthropic-version: 2023-06-01"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic의 API는 인증에 'Authorization: Bearer' 패턴 대신 'x-api-key' 헤더를 사용합니다. 이는 해당 API의 고유한 설계 방식입니다."
+    },
+    {
+      "stage": "post",
+      "question": "API의 요청 제한(rate limit)을 초과하면 어떤 일이 발생하나요?",
+      "options": [
+        "API 키가 영구적으로 박탈됩니다",
+        "서버가 오류(일반적으로 HTTP 429)를 반환하며 재시도 전에 대기해야 합니다",
+        "요청이 큐에 저장되고 자동으로 나중에 처리됩니다",
+        "API가 응답 없이 요청을 조용히 무시합니다"
+      ],
+      "correct": 1,
+      "explanation": "요청 제한(rate limit) 초과 시 HTTP 429(Too Many Requests) 오류가 반환됩니다. 일반적으로 지수 백오프(exponential backoff) 전략과 함께 대기 후 재시도해야 합니다. 요청 제한은 남용 방지와 공정한 사용을 보장합니다."
+    }
+  ]
+}

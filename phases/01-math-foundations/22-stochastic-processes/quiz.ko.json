@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "마르코프 성질(Markov property)이란 무엇인가요?",
+      "options": [
+        "프로세스는 항상 시작 상태로 돌아간다",
+        "다음 상태는 현재 상태에만 의존하며, 이전 상태들의 역사(history)에는 의존하지 않는다",
+        "모든 단계에서 모든 상태(state)가 동일한 확률로 발생한다",
+        "프로세스는 유한한 수의 상태를 가져야 한다"
+      ],
+      "correct": 1,
+      "explanation": "마르코프 성질(메모리리스 성질)은 P(X_{t+1} = j | X_t = i, X_{t-1}, ...) = P(X_{t+1} = j | X_t = i)를 의미합니다. 미래는 현재 위치에만 의존하며, 어떻게 도달했는지는 고려하지 않습니다. 이를 통해 전이 행렬(transition matrix)을 사용한 간결한 표현이 가능해집니다."
+    },
+    {
+      "stage": "pre",
+      "question": "1D 랜덤 워크에서, 원점으로부터의 기대 거리는 단계 수 n에 어떻게 비례해 증가하나요?",
+      "options": [
+        "선형: n에 비례",
+        "제곱근: sqrt(n)에 비례",
+        "로그: log(n)에 비례",
+        "n과 무관하게 일정"
+      ],
+      "correct": 1,
+      "explanation": "각 단계는 +/1-1로 동일한 확률을 가집니다. n 단계 후 분산은 n이므로, 표준 편차(전형적인 원점 거리)는 sqrt(n)입니다. 10,000 단계 후 기대 거리는 약 100이며, 10,000이 아닙니다."
+    },
+    {
+      "stage": "post",
+      "question": "마르코프 체인의 정상 분포(stationary distribution)란 무엇인가요?",
+      "options": [
+        "상태들의 초기 분포(initial distribution)",
+        "전이 행렬(transition matrix) 적용 시 변하지 않는 분포: pi * P = pi",
+        "정확히 한 번 전이(transition) 후 상태 분포",
+        "모든 상태에 대한 균등 분포(uniform distribution)"
+      ],
+      "correct": 1,
+      "explanation": "정상 분포(stationary distribution) pi는 pi * P = pi를 만족합니다. 즉, 전이 행렬을 적용해도 분포가 변하지 않습니다. 이는 장기적으로 각 상태에서 소비되는 시간 비율을 나타냅니다. 기약(irreducible)이고 비주기적(aperiodic)인 체인의 경우, 어떤 초기 분포든 pi로 수렴합니다."
+    },
+    {
+      "stage": "post",
+      "question": "Langevin dynamics에서 x_{t+1} = x_t - dt * grad(U) + sqrt(2*T*dt) * z일 때, 온도 T가 0에 가까워지면 어떤 현상이 발생하나요?",
+      "options": [
+        "프로세스가 순수 랜덤 워크가 된다",
+        "프로세스가 순수 경사 하강법(결정적 최적화)이 된다",
+        "프로세스가 무한대로 발산한다",
+        "프로세스가 초기 위치에서 정지한다"
+      ],
+      "correct": 1,
+      "explanation": "T = 0일 때 노이즈 항인 sqrt(2*T*dt)*z가 사라지며, x_{t+1} = x_t - dt * grad(U)만 남게 되어 표준 경사 하강법이 됩니다. 높은 T에서는 노이즈가 지배적이 되어 프로세스가 거의 랜덤 워크가 됩니다. 중간 T 값은 탐색(exploration)과 활용(exploitation) 사이의 균형을 이룹니다."
+    },
+    {
+      "stage": "post",
+      "question": "확산 모델에서 순방향 과정(forward process)은 T 단계 동안 데이터 샘플에 어떤 작업을 수행하나요?",
+      "options": [
+        "각 단계에서 노이즈를 제거하여 이미지를 선명하게 만듭니다",
+        "마르코프 체인을 따라 샘플이 순수 노이즈가 될 때까지 가우시안 노이즈를 점진적으로 추가합니다",
+        "이미지를 더 낮은 해상도로 압축합니다",
+        "새로운 데이터를 생성하기 위해 학습된 변환을 적용합니다"
+      ],
+      "correct": 1,
+      "explanation": "순방향 과정은 마르코프 체인입니다: x_t = sqrt(alpha_t) * x_{t-1} + sqrt(1 - alpha_t) * noise. T 단계 후 x_T는 약 N(0, I) — 순수 가우시안 노이즈에 근접합니다. 이후 역과정(신경망 학습)은 단계별로 노이즈를 제거해 새로운 데이터를 생성합니다."
+    }
+  ]
+}

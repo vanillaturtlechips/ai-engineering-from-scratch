@@ -1,0 +1,61 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "prompt": "LangGraph State TypedDict의 `messages` 필드에 `Annotated[list, add_messages]`가 필요한 이유는 무엇인가요?",
+      "choices": [
+        "모델에서 토큰 델타(token delta)의 스트리밍을 활성화합니다.",
+        "리듀서(reducer)가 없으면 노드 업데이트가 리스트를 덮어쓰므로 매 턴마다 이전 기록이 손실됩니다.",
+        "체크포인트를 디스크에 쓸 때 메시지 리스트를 압축합니다.",
+        "런타임에 일반 딕셔너리(dict)를 LangChain 메시지 객체로 변환합니다."
+      ],
+      "answer": 1
+    },
+    {
+      "id": 2,
+      "prompt": "`interrupt_before=['tools']`와 `interrupt_after=['tools']`의 차이점은 무엇인가요?",
+      "choices": [
+        "차이 없음; 이들은 동의어입니다.",
+        "`interrupt_before`는 모델이 tool_calls를 생성한 후 툴이 실행되기 전에 일시 중지합니다. `interrupt_after`는 툴이 이미 실행된 후 일시 중지합니다.",
+        "`interrupt_before`는 툴이 샌드박스에서 먼저 실행됩니다. `interrupt_after`는 프로덕션 환경에서 실행됩니다.",
+        "`interrupt_before`는 단위 테스트용입니다. `interrupt_after`는 프로덕션용입니다."
+      ],
+      "answer": 1
+    },
+    {
+      "id": 3,
+      "prompt": "스레드의 체크포인트 기록이 주어졌을 때, 이전 상태로 시간 이동하여 다른 분기를 탐색하는 방법은?",
+      "choices": [
+        "`graph.reset(thread_id)`를 호출한 후 `graph.invoke(new_input, config)`를 실행합니다.",
+        "체크포인트 디렉터리를 삭제하고 동일한 `thread_id`로 재호출합니다.",
+        "설정에 원하는 이전 `checkpoint_id`를 지정하여 그래프를 호출합니다. 입력을 `None`으로 전달하면 해당 체크포인트부터 재생되고, 새 값을 전달하면 재개 전 해당 값에 추가됩니다.",
+        "`graph.rewind = True`로 설정하고 재호출합니다."
+      ],
+      "answer": 2
+    },
+    {
+      "id": 4,
+      "prompt": "4노드 ReAct 그래프(에이전트, 툴, 조건부 엣지, 에이전트로 돌아가는 정적 엣지)에서 조건부 엣지는 어디에 위치하나요?",
+      "choices": [
+        "`tools`에서 `agent`로 돌아가며, 툴 출력이 비어있는지 여부에 따라 라우팅됩니다.",
+        "`agent`에서 출발하며, 마지막 메시지에 `tool_calls`가 있으면 `tools`로, 그렇지 않으면 `END`로 라우팅됩니다.",
+        "`START`에서 출발하며, 입력 길이에 따라 `agent` 또는 `END`로 라우팅됩니다.",
+        "조건부 엣지는 없으며, 모두 정적 엣지입니다."
+      ],
+      "answer": 1
+    },
+    {
+      "id": 5,
+      "question": "`Send(node_name, state)`를 일반 엣지 대신 언제 사용해야 하는가?",
+      "options": [
+        "실패 후 노드를 재시도할 때.",
+        "타이머가 만료될 때까지 노드를 연기할 때.",
+        "출력이 상태 리듀서를 통해 병합되는 대상 노드의 N개 병렬 실행을 디스패치할 때.",
+        "격리를 위해 다른 프로세스에서 노드를 호출할 때."
+      ],
+      "correct": 2,
+      "explanation": "`Send(node_name, state)`는 병렬 실행 후 상태 리듀서로 병합이 필요한 경우 사용됩니다. 일반 엣지와 달리 여러 실행 인스턴스의 출력을 단일 상태로 결합할 수 있습니다. 다른 옵션들은 재시도, 지연 실행, 프로세스 격리 등 다른 메커니즘으로 처리되는 시나리오입니다.",
+      "stage": 2
+    }
+  ]
+}

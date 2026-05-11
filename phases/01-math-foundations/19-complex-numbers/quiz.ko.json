@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "허수 단위 i는 무엇에 의해 정의되나요?",
+      "options": [
+        "i = sqrt(2)",
+        "i^2 = -1",
+        "i = -1",
+        "i^2 = 1"
+      ],
+      "correct": 1,
+      "explanation": "허수 단위 i는 i^2 = -1이라는 성질에 의해 정의됩니다. 이는 실수 선을 2D 평면으로 확장합니다. 기하학적으로 i를 곱하는 것은 90도 회전이며, 두 번 곱할 경우(i^2) 180도 회전인 -1이 됩니다."
+    },
+    {
+      "stage": "pre",
+      "question": "오일러 공식 e^(i*theta)는 무엇을 의미하나요?",
+      "options": [
+        "theta + i",
+        "cos(theta) + i*sin(theta)",
+        "sin(theta) + cos(theta)",
+        "i^theta"
+      ],
+      "correct": 1,
+      "explanation": "오일러 공식은 e^(i*theta) = cos(theta) + i*sin(theta)로 표현됩니다. 이는 복소수 지수 함수와 삼각 함수를 연결하며, theta가 변함에 따라 e^(i*theta)가 단위 원을 그리는 것을 보여줍니다."
+    },
+    {
+      "stage": "post",
+      "question": "(3 + 2i)(1 + 4i)의 결과는 무엇인가요?",
+      "options": [
+        "3 + 8i",
+        "4 + 6i",
+        "-5 + 14i",
+        "5 + 14i"
+      ],
+      "correct": 2,
+      "explanation": "FOIL 방법 적용: (3)(1) + (3)(4i) + (2i)(1) + (2i)(4i) = 3 + 12i + 2i + 8i^2 = 3 + 14i + 8(-1) = 3 + 14i - 8 = -5 + 14i."
+    },
+    {
+      "stage": "post",
+      "question": "트랜스포머의 Rotary Position Embedding(RoPE)에서 복소수(complex numbers)가 사용되는 이유는 무엇인가요?",
+      "options": [
+        "복소수는 위치 인코딩을 압축하여 메모리 사용량을 줄입니다",
+        "쿼리/키 벡터에 복소수 회전을 곱하면 상대 위치가 회전 각도로 인코딩됩니다",
+        "주의 소프트맥스 함수(attention softmax function)에서 복소수가 필수적으로 요구됩니다",
+        "RoPE는 음수 위치를 처리하기 위해 허수(imaginary numbers)를 사용합니다"
+      ],
+      "correct": 1,
+      "explanation": "RoPE는 쿼리 및 키 벡터에 복소수 회전 행렬 e^(i*m*theta)를 곱합니다. 여기서 m은 위치입니다. 두 토큰 간의 상대 위치는 회전 각도가 되며, 복소수 곱셈을 통해 어텐션이 자연스럽게 절대 위치가 아닌 상대 위치에 민감해집니다."
+    },
+    {
+      "stage": "post",
+      "question": "N차 단위근은 단위 원 위에 N개의 동일한 간격으로 배치된 점들입니다. 이들의 합은 무엇인가요?",
+      "options": [
+        "N",
+        "1",
+        "0",
+        "N/2"
+      ],
+      "correct": 2,
+      "explanation": "N차 단위근은 k = 0, ..., N-1에 대해 e^(2*pi*i*k/N)로 표현됩니다. 이들은 단위 원 주위에 대칭적으로 분포되어 있어 벡터 합이 상쇄되어 0이 됩니다. 이 대칭성은 DFT(이산 푸리에 변환)가 역변환 가능한 이유입니다."
+    }
+  ]
+}

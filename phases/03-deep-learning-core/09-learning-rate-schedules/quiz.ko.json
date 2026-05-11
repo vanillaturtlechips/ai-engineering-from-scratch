@@ -1,0 +1,62 @@
+[
+  {
+    "question": "왜 상수 학습률(learning rate)은 일반적으로 신경망 훈련에 비최적의가요?",
+    "options": [
+      "너무 많은 메모리를 사용한다",
+      "훈련 후반에는 너무 높아 진동(oscillation)을 일으키거나, 훈련 초반에는 너무 낮아 계산 자원을 낭비한다",
+      "상수 학습률은 과적합(overfitting)을 유발한다",
+      "SGD(확률적 경사 하강법)와만 호환된다"
+    ],
+    "correct": 1,
+    "explanation": "훈련 과정에서 최적의 스텝 크기(step size)는 변화합니다. 초반에는 큰 스텝이 빠르게 수렴하는 데 도움이 되지만, 후반에는 최소값(minimum)에 안정적으로 정착하기 위해 작은 스텝이 필요합니다. 상수 학습률은 이 두 가지 요구를 동시에 충족할 수 없습니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "학습률 워밍업(learning rate warmup)의 목적은 무엇인가요?",
+    "options": [
+      "과적합(overfitting) 방지",
+      "적응형 옵티마이저 통계량(운동량(momentum), 분산(variance))이 큰 단계를 밟기 전에 안정화되도록 하기",
+      "배치 크기(batch size)를 점진적으로 증가시키기",
+      "가중치(weights)를 적절히 초기화하기"
+    ],
+    "correct": 1,
+    "explanation": "Adam의 모멘트 추정값은 0으로 초기화됩니다. 초기 그래디언트 업데이트는 신뢰할 수 없는 통계량에 기반합니다. 워밍업은 매우 작은 학습률(LR)로 시작하여 점진적으로 증가시키며, Adam이 의미 있는 추정값을 축적할 시간을 줍니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "Llama 3, GPT-3 및 대부분의 현대 LLM에서 사용하는 학습률 스케줄은 무엇인가요?",
+    "options": [
+      "상수 학습률(Constant learning rate)",
+      "30 에포크마다 단계적 감소(Step decay every 30 epochs)",
+      "선형 워밍업 후 코사인 감소(Linear warmup followed by cosine decay)",
+      "지수 감소(Exponential decay)"
+    ],
+    "correct": 2,
+    "explanation": "선형 워밍업 + 코사인 감소는 트랜스포머 학습의 표준입니다. Llama 3는 2000 워밍업 스텝과 함께 3e-4에서 3e-5로 코사인 감소를 사용했습니다. 이 스케줄은 마일스톤 튜닝이 필요하지 않습니다.",
+    "stage": "post"
+  },
+  {
+    "question": "1사이클 정책(1cycle policy)이 다른 스케줄과 다른 점은 무엇인가요?",
+    "options": [
+      "일정한 학습률(learning rate)을 사용합니다",
+      "훈련 전반부에 학습률을 높였다가 후반부에 다시 낮춥니다 -- 높은 학습률(high LR) 단계가 정규화(regularization) 역할을 합니다",
+      "SGD(Stochastic Gradient Descent)와만 호환됩니다",
+      "하이퍼파라미터 튜닝이 필요 없습니다"
+    ],
+    "correct": 1,
+    "explanation": "레슬리 스미스(Leslie Smith)의 1사이클은 학습률을 낮은 값에서 높은 값으로(훈련 전반부), 이후 높은 값에서 매우 낮은 값으로(훈련 후반부) 조정합니다. 높은 학습률(high LR) 단계는 모델이 최적의 손실 함수(loss function) 영역에 정착하기 전 손실 지형(loss landscape)을 더 넓게 탐색하도록 돕습니다.",
+    "stage": "post"
+  },
+  {
+    "question": "훈련 손실(training loss)이 갑자기 급증하고 발산한다면, 가장 가능성 있는 학습률(learning rate) 문제는 무엇인가요?",
+    "options": [
+      "학습률(learning rate)이 너무 낮음",
+      "학습률(learning rate)이 너무 높아 최적화기(optimizer)가 최소값을 지나치게 됨",
+      "워밍업(warmup) 기간이 너무 김",
+      "스케줄(schedule)이 너무 느리게 감소함"
+    ],
+    "correct": 1,
+    "explanation": "너무 높은 학습률(learning rate)은 최적화기(optimizer)가 손실 곡면(loss basin)보다 큰 단계로 이동하게 하여 최소값을 지나치게 되고, 이로 인해 손실이 증가합니다. 이는 갑작스러운 발산으로 나타납니다.",
+    "stage": "post"
+  }
+]

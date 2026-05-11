@@ -1,0 +1,67 @@
+[
+  {
+    "id": "svm-pre-1",
+    "stage": "pre",
+    "question": "SVM에서 서포트 벡터(support vector)란 무엇인가요?",
+    "options": [
+      "훈련 세트의 모든 데이터 포인트",
+      "초평면을 결정하는 결정 경계(decision boundary)에 가장 가까운 훈련 포인트",
+      "커널 변환 후의 특성 벡터(feature vector)",
+      "훈련 중 학습된 가중치 벡터(weight vector)"
+    ],
+    "correct": 1,
+    "explanation": "서포트 벡터는 마진 경계(margin boundary) 위에 정확히 위치한 훈련 포인트입니다. 이들은 결정 초평면(decision hyperplane)을 결정하는 유일한 점들입니다. 비-서포트 벡터 포인트를 제거해도 경계는 변하지 않습니다."
+  },
+  {
+    "id": "svm-pre-2",
+    "stage": "pre",
+    "question": "SVM이 결정 경계를 찾을 때 최대화하는 것은 무엇인가요?",
+    "options": [
+      "올바르게 분류된 훈련 데이터의 개수",
+      "마진(margin) -- 결정 경계와 각 클래스의 가장 가까운 데이터 포인트 사이의 거리",
+      "모든 데이터 포인트에서 경계까지의 총 거리",
+      "결정 경계의 복잡성"
+    ],
+    "correct": 1,
+    "explanation": "SVM은 두 클래스 사이의 마진(margin)을 최대화하는 초평면(hyperplane)을 찾습니다. 더 넓은 마진은 미확인 데이터에 대한 일반화 성능을 향상시킵니다."
+  },
+  {
+    "id": "svm-post-1",
+    "stage": "post",
+    "question": "SVM에서 C 파라미터를 증가시키면 어떻게 되는가?",
+    "options": [
+      "마진(margin)이 넓어지고 더 많은 오분류가 허용됨",
+      "마진이 좁아지고, 적은 오분류가 허용되며 모델이 과적합될 수 있음",
+      "커널 함수가 선형에서 RBF로 변경됨",
+      "항상 서포트 벡터(support vector)의 수가 증가함"
+    ],
+    "correct": 1,
+    "explanation": "큰 C는 오분류를 강하게 페널티하여 훈련 데이터에 밀접하게 맞는 좁은 마진을 생성합니다. 이는 과적합(overfitting)으로 이어질 수 있습니다. 작은 C는 더 넓고 정규화된 마진을 위해 더 많은 위반을 허용합니다."
+  },
+  {
+    "id": "svm-post-2",
+    "stage": "post",
+    "question": "커널 트릭(kernel trick)은 어떻게 SVM이 비선형 경계를 학습하도록 가능하게 하나요?",
+    "options": [
+      "SVM을 신경망(neural network)으로 대체합니다",
+      "데이터를 명시적으로 고차원 공간에 매핑하지 않고도 고차원 공간에서의 내적(dot product)을 계산합니다",
+      "훈련 전에 데이터셋에서 이상치(outliers)를 제거합니다",
+      "입력 데이터에 직접 다항식 특성(polynomial features)을 추가합니다"
+    ],
+    "correct": 1,
+    "explanation": "커널 트릭은 모든 내적 x_i . x_j를 K(x_i, x_j)로 대체하여, 고차원(심지어 RBF의 경우 무한차원) 특성 공간에서의 내적을 계산하되 해당 공간을 명시적으로 구성하지 않습니다."
+  },
+  {
+    "id": "svm-post-3",
+    "stage": "post",
+    "question": "힌지 손실(hinge loss)이 0일 때 y * f(x) >= 1입니다. 이는 분류 관점에서 무엇을 의미하나요?",
+    "options": [
+      "데이터 포인트가 잘못 분류됨",
+      "데이터 포인트가 올바르게 분류되고 마진(margin) 바깥에 위치함",
+      "데이터 포인트가 결정 경계(decision boundary) 위에 정확히 위치함",
+      "데이터 포인트가 무시해야 할 노이즈 샘플임"
+    ],
+    "correct": 1,
+    "explanation": "y * f(x) >= 1일 때, 데이터 포인트는 올바르게 분류되었으며 마진 경계(margin boundary) 위에 있거나 그 너머에 있습니다. 마진 내부에 있거나 잘못 분류된 데이터 포인트(y * f(x) < 1)만 힌지 손실(hinge loss)에 기여합니다."
+  }
+]

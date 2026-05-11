@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "푸리에 변환(Fourier transform)은 신호에 어떤 작업을 수행하나요?",
+      "options": [
+        "신호를 압축하여 저장 공간을 적게 사용합니다",
+        "신호를 서로 다른 주파수, 진폭, 위상을 가진 사인파(sine waves)로 분해합니다",
+        "신호에서 노이즈를 제거합니다",
+        "신호를 아날로그에서 디지털로 변환합니다"
+      ],
+      "correct": 1,
+      "explanation": "푸리에 변환은 신호를 시간 영역(time domain)에서 주파수 영역(frequency domain)으로 변환합니다. 각 주파수 계수 X[k]는 주파수 k에서의 사인파(sine wave)의 진폭과 위상을 나타냅니다. 신호는 이러한 사인파들의 합으로 재구성됩니다."
+    },
+    {
+      "stage": "pre",
+      "question": "고속 푸리에 변환(FFT)의 시간 복잡도는 직접 DFT와 비교하여 어떻게 되나요?",
+      "options": [
+        "둘 다 O(N^2)",
+        "FFT는 O(N log N), DFT는 O(N^2)",
+        "FFT는 O(N), DFT는 O(N log N)",
+        "FFT는 O(log N), DFT는 O(N)"
+      ],
+      "correct": 1,
+      "explanation": "직접 DFT는 N개의 출력을 계산하며, 각각 N개의 입력을 합산하므로 O(N^2)입니다. 쿨리-터키 FFT는 신호를 짝수/홀수 절반으로 재귀적으로 분할하며, log2(N) 레벨에서 각각 O(N) 작업을 수행해 O(N log N) 복잡도를 가집니다. N = 100만일 때, 이는 2천만 vs 1조 연산 차이를 만듭니다."
+    },
+    {
+      "stage": "post",
+      "question": "합성곱 정리(convolution theorem)는 무엇을 설명하나요?",
+      "options": [
+        "시간 영역에서의 합성곱(convolution)은 주파수 영역에서의 덧셈(addition)과 같다",
+        "시간 영역에서의 합성곱(convolution)은 주파수 영역에서의 점별 곱셈(pointwise multiplication)과 같다",
+        "합성곱(convolution)은 항상 신호의 길이를 증가시킨다",
+        "합성곱(convolution)과 상관(correlation)은 동일한 연산이다"
+      ],
+      "correct": 1,
+      "explanation": "합성곱 정리(convolution theorem)는 시간 영역에서의 합성곱(convolution)이 주파수 영역에서의 점별 곱셈(pointwise multiplication)과 같음을 설명합니다: x * h = IFFT(FFT(x) . FFT(h)). 이것이 큰 커널(kernel)에 대해 FFT 기반 합성곱(convolution)이 O(N*M) 대신 O(N log N)이 되는 이유입니다."
+    },
+    {
+      "stage": "post",
+      "question": "FFT 전에 신호에 제로 패딩(zero-padding)을 적용해도 실제 주파수 해상도가 증가하지 않는 이유는 무엇인가요?",
+      "options": [
+        "제로 패딩은 개선을 상쇄하는 노이즈를 도입한다",
+        "제로 패딩은 기존 주파수 빈(bin) 사이를 보간(interpolate)하지만 원본 샘플에 없는 주파수 세부 정보를 드러낼 수 없다",
+        "제로 패딩은 2의 거듭제곱(power-of-2) 신호 길이에 대해서만 작동한다",
+        "FFT 알고리즘은 제로 패딩된 샘플을 무시한다"
+      ],
+      "correct": 1,
+      "explanation": "실제 주파수 해상도는 관측 시간 T = N/fs에 의해 결정된다. 제로 패딩은 더 많은 주파수 빈(더 미세한 그리드)을 추가하지만 기존 스펙트럼을 보간할 뿐이다. 이는 1/T Hz보다 가까운 주파수를 분해하지 않고 더 부드러운 결과를 제공한다."
+    },
+    {
+      "stage": "post",
+      "question": "원래 트랜스포머(Transformer)의 사인파 위치 인코딩(sinusoidal positional encoding)에서 서로 다른 차원 쌍에 기하학적으로 간격을 둔 주파수를 할당하는 이유는 무엇인가요?",
+      "options": [
+        "어텐션(attention) 계산 비용을 줄이기 위해서",
+        "각 주파수는 다른 해상도를 제공합니다 — 고주파는 세밀한 위치를 인코딩하고, 저주파는 거친 위치를 인코딩하여 각 위치에 고유한 지문(fingerprint)을 부여합니다",
+        "FFT 알고리즘에 기하학적 간격이 필요하기 때문에",
+        "모든 인코딩 값이 0과 1 사이에 있도록 보장하기 위해"
+      ],
+      "correct": 1,
+      "explanation": "고주파 차원은 위치에 따라 빠르게 변화(세밀한 해상도)하고, 저주파 차원은 천천히 변화(거친 해상도)합니다. 다중 주파수 인코딩을 함께 사용하면 모든 위치에 고유한 패턴이 부여됩니다 — 이는 푸리에 계수(Fourier coefficients)가 신호를 고유하게 식별하는 방식과 유사합니다."
+    }
+  ]
+}

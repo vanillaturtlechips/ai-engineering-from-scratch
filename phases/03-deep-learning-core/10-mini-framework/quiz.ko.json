@@ -1,0 +1,62 @@
+[
+  {
+    "question": "딥러닝 프레임워크에서 Module 추상화가 가지는 세 가지 책임은 무엇인가요?",
+    "options": [
+      "데이터 로드, 데이터 전처리, 데이터 증강",
+      "계산을 위한 forward(), 그래디언트를 위한 backward(), 학습 가능한 가중치를 위한 parameters()",
+      "컴파일, 최적화, 배포",
+      "토큰화, 임베딩, 디코딩"
+    ],
+    "correct": 1,
+    "explanation": "모든 Module은 출력을 계산하는 forward(), 그래디언트를 전파하는 backward(), 학습 가능한 가중치를 노출하는 parameters()를 구현합니다. 이 균일한 인터페이스를 통해 어떤 모듈도 다른 모듈과 결합될 수 있습니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "Sequential이 역전파(backward pass) 시 모듈을 역순으로 처리하는 이유는 무엇인가요?",
+    "options": [
+      "임의의 방향 -- 어느 방향이든 작동함",
+      "기울기(gradient)가 손실(loss)에서부터 네트워크를 역방향으로 흐르기 때문에 마지막 레이어가 먼저 기울기를 계산함",
+      "역순 처리 시 메모리를 덜 사용함",
+      "기울기 폭발(gradient explosion)을 방지함"
+    ],
+    "correct": 1,
+    "explanation": "역전파는 손실(loss)에서 시작하여 입력 방향으로 기울기(gradient)를 전파합니다. 마지막 레이어가 손실 기울기를 먼저 수신한 후, 해당 레이어의 지역 기울기(local gradients)를 계산하고 이전 레이어로 전달합니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "왜 optimizer.zero_grad()는 자동으로 수행되지 않고 별도의 호출로 구현되었나요?",
+    "options": [
+      "PyTorch의 설계 실수입니다",
+      "단일 옵티마이저 단계(optimizer step) 전에 여러 배치에 걸쳐 그래디언트 누적(gradient accumulation)을 허용합니다",
+      "메모리를 절약합니다",
+      "디버깅을 쉽게 만듭니다"
+    ],
+    "correct": 1,
+    "explanation": "zero_grad와 step을 분리하면 그래디언트 누적이 가능해집니다: 여러 미니배치(mini-batch)에 걸쳐 backward()를 여러 번 실행한 후 그래디언트를 합산하고 step()을 호출할 수 있습니다. 이는 더 큰 배치 크기(batch size)를 시뮬레이션하는 효과를 냅니다.",
+    "stage": "post"
+  },
+  {
+    "question": "훈련 루프에서 연산 순서는 어떻게 되어야 하나요?",
+    "options": [
+      "backward, forward, zero_grad, step",
+      "forward, loss, zero_grad, backward, step",
+      "zero_grad, forward, loss, backward, step",
+      "forward, zero_grad, backward, loss, step"
+    ],
+    "correct": 2,
+    "explanation": "표준 패턴: zero_grad(기존 그래디언트 초기화), forward(예측 계산), loss(스칼라 손실 계산), backward(그래디언트 계산), step(파라미터 업데이트). 순서를 잘못 지정하면 미묘한 버그가 발생합니다.",
+    "stage": "post"
+  },
+  {
+    "question": "프레임워크에서 DataLoader의 역할은 무엇인가요?",
+    "options": [
+      "모델을 훈련시킨다",
+      "데이터를 배치로 분할하고 미니 배치 경사 하강법을 위해 에포크 간 선택적으로 섞는다",
+      "손실 함수를 계산한다",
+      "가중치를 초기화한다"
+    ],
+    "correct": 1,
+    "explanation": "DataLoader는 두 가지 실용적인 문제를 처리합니다: 배치 처리(모든 데이터를 메모리에 올릴 수 없음)와 섞기(무작위 순서는 모델이 데이터 시퀀스를 암기하는 것을 방지).",
+    "stage": "post"
+  }
+]

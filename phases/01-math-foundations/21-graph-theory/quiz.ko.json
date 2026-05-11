@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "인접 행렬 A[i][j] = 1은 무엇을 의미하나요?",
+      "options": [
+        "노드 i의 차수가 j이다",
+        "노드 i에서 노드 j로 간선이 존재한다",
+        "노드 i와 노드 j는 같은 레이블을 가진다",
+        "i에서 j까지의 최단 경로 길이는 1이다"
+      ],
+      "correct": 1,
+      "explanation": "인접 행렬은 그래프의 핵심 표현 방식입니다. A[i][j] = 1은 노드 i와 노드 j를 연결하는 간선이 있음을 의미합니다. 무방향 그래프의 경우 행렬은 대칭적입니다(A[i][j] = A[j][i])."
+    },
+    {
+      "stage": "pre",
+      "question": "BFS는 어떤 자료 구조를 사용하며 무엇을 찾나요?",
+      "options": [
+        "스택(Stack); 연결 요소(connected components)를 찾음",
+        "큐(Queue); 가중치가 없는 그래프에서 최단 경로(shortest paths)를 찾음",
+        "우선순위 큐(Priority queue); 최소 신장 트리(minimum spanning tree)를 찾음",
+        "해시 맵(Hash map); 중복 노드(duplicate nodes)를 찾음"
+      ],
+      "correct": 1,
+      "explanation": "BFS는 큐(Queue, FIFO)를 사용하여 거리 k에 있는 모든 이웃을 탐색한 후 거리 k+1로 이동합니다. 이는 노드가 처음 발견될 때 소스(source)로부터의 최단 경로(shortest path)를 통해 발견됨을 보장합니다."
+    },
+    {
+      "stage": "post",
+      "question": "연결 그래프의 그래프 라플라시안 L = D - A는 몇 개의 0 고유값을 갖는가?",
+      "options": [
+        "0개",
+        "정확히 1개",
+        "노드 개수와 동일",
+        "엣지 개수와 동일"
+      ],
+      "correct": 1,
+      "explanation": "라플라시안의 0 고유값 개수는 연결 성분(connected components)의 개수와 같습니다. 연결 그래프는 정확히 1개의 연결 성분을 가지므로 정확히 1개의 0 고유값을 가집니다. k개의 분리된 조각으로 이루어진 그래프는 k개의 0 고유값을 가집니다."
+    },
+    {
+      "stage": "post",
+      "question": "GNN 메시지 전달에서 h_v^(k+1) = sigma(W * mean({h_u^(k) : u in neighbors(v)}))는 무엇을 계산하는가?",
+      "options": [
+        "노드 v에서 다른 모든 노드까지의 최단 경로",
+        "이웃 노드 특성을 집계하고 학습된 가중치로 변환한 후 비선형 함수를 적용하여 노드 v의 새로운 특성 벡터 생성",
+        "레이어 k+1에서 노드 v의 차수(degree)",
+        "노드 v의 페이지랭크(PageRank) 점수"
+      ],
+      "correct": 1,
+      "explanation": "각 노드는 이웃 노드로부터 특성(평균 집계)을 수집하고, 학습된 가중치 행렬 W를 곱한 후 활성화 함수 sigma를 적용합니다. k번의 라운드 후에는 각 노드가 k-hop 이웃 영역의 정보를 가지게 됩니다."
+    },
+    {
+      "stage": "post",
+      "question": "스펙트럴 클러스터링에서 Fiedler 벡터(라플라시안 행렬 L의 두 번째로 작은 고유값에 해당하는 고유벡터)는 어떻게 사용되나요?",
+      "options": [
+        "Fiedler 벡터 값이 가장 큰 노드들이 하나의 클러스터를 형성함",
+        "Fiedler 벡터 값이 양수인 노드는 한 그룹에, 음수인 노드는 다른 그룹에 배치됨",
+        "Fiedler 벡터는 엣지 가중치로 사용됨",
+        "Fiedler 벡터는 클러스터 개수를 결정함"
+      ],
+      "correct": 1,
+      "explanation": "Fiedler 벡터는 그래프에서 가장 부드러운 비자명 함수(non-trivial function)를 인코딩합니다. 같은 밀집 클러스터에 속한 노드들은 유사한 값을 가지며, 병목(bottleneck)으로 분리된 노드들은 부호가 반대인 값을 가집니다. 부호 분할(sign split)은 그래프를 두 클러스터로 분할합니다."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "question": "퍼셉트론은 활성화 함수를 적용하기 전에 입력값에 어떤 수학적 연산을 수행하나요?",
+    "options": [
+      "행렬 역변환",
+      "가중치 합계에 편향(bias) 더하기",
+      "푸리에 변환",
+      "고유값 분해"
+    ],
+    "correct": 1,
+    "explanation": "퍼셉트론은 입력값과 가중치(weights)의 내적(dot product)을 계산한 후 편향(bias) 항을 더하고, 그 결과를 계단 함수(step function)에 전달합니다. 이 가중치 합계에 편향(bias) 더하기가 핵심 연산입니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "분류 문제에서 '선형적으로 분리 가능(linearly separable)'의 의미는 무엇인가요?",
+    "options": [
+      "데이터를 순서대로 정렬할 수 있다",
+      "단일 직선(또는 초평면)이 클래스를 완벽하게 분리할 수 있다",
+      "특성(feature)이 레이블(label)과 선형 관계를 가진다",
+      "데이터가 2차원만 가진다"
+    ],
+    "correct": 1,
+    "explanation": "데이터셋이 선형적으로 분리 가능하다는 것은 입력 공간을 올바른 클래스로 완벽하게 나누는 단일 초평면(hyperplane)을 그릴 수 있을 때를 의미합니다. AND와 OR는 선형적으로 분리 가능하지만, XOR는 그렇지 않습니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "단일 퍼셉트론(perceptron)이 XOR 함수를 학습하지 못하는 이유는 무엇인가요?",
+    "options": [
+      "학습률(learning rate)이 너무 낮기 때문",
+      "XOR의 입력(input)이 너무 많기 때문",
+      "XOR은 선형 분리가 불가능 -- 단일 직선으로 클래스를 분리할 수 없음",
+      "계단 함수(step function)가 기울기(gradient) 흐름을 차단하기 때문"
+    ],
+    "correct": 2,
+    "explanation": "XOR은 [0,1]과 [1,0]을 한 그룹으로, [0,0]과 [1,1]을 다른 그룹으로 분류합니다. 단일 직선으로는 이 그룹들을 분리할 수 없으므로, 하나의 선형 경계만 생성할 수 있는 단일 퍼셉트론(perceptron)으로는 XOR 문제를 해결할 수 없습니다.",
+    "stage": "post"
+  },
+  {
+    "question": "퍼셉트론 학습 규칙에서 예측이 목표값과 일치할 때 어떤 일이 발생하나요?",
+    "options": [
+      "가중치가 두 배로 증가",
+      "가중치가 0으로 설정",
+      "변화 없음 -- 오차가 0이므로 업데이트도 0",
+      "학습률이 절반으로 감소"
+    ],
+    "correct": 2,
+    "explanation": "업데이트 규칙은 w_i = w_i + lr * error * x_i입니다. 예측이 목표값과 같을 때 오차(error) = 0이 되어 모든 가중치 업데이트가 0이 됩니다. 퍼셉트론은 오류를 만들었을 때만 조정합니다.",
+    "stage": "post"
+  },
+  {
+    "question": "XOR 문제는 여러 퍼셉트론을 어떻게 사용하여 해결하나요?",
+    "options": [
+      "단일 퍼셉트론에 더 큰 학습률(learning rate)을 사용하여",
+      "OR, NAND, AND 퍼셉트론을 2개 레이어에 결합하여",
+      "단일 퍼셉트론에 더 많은 입력(inputs)을 추가하여",
+      "바이어스(bias) 항을 제거하여"
+    ],
+    "correct": 1,
+    "explanation": "XOR = (x1 OR x2) AND NOT(x1 AND x2). OR 뉴런과 NAND 뉴런으로 구성된 은닉층(hidden layer)이 출력 AND 뉴런에 입력되며, 선형 구성 요소로부터 비선형 결정 경계(nonlinear decision boundary)를 생성합니다.",
+    "stage": "post"
+  }
+]

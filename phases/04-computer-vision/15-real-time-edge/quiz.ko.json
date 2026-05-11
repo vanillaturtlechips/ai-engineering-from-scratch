@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "모델을 벤치마킹하고 '4090에서 이미지당 평균 12ms'라고 보고했습니다. 무엇이 누락되었나요?",
+      "options": [
+        "없음; 완전한 벤치마크입니다",
+        "백분위수(p50/p95/p99), 워밍업 절차, CUDA 동기화; 평균만으로는 꼬리 지연 시간을 숨기며 커널 실행이 아닌 디스패치 시간을 측정할 수 있습니다",
+        "모델 크기",
+        "데이터셋 이름"
+      ],
+      "correct": 1,
+      "explanation": "프로덕션 지연 시간은 백분위수로 측정됩니다. 실시간 시스템은 평균이 아닌 꼬리 부분에서 실패하기 때문입니다. 워밍업이 없으면 JIT 컴파일이 처음 몇 번의 측정을 부풀립니다. torch.cuda.synchronize가 없으면 GPU 커널 실행이 완료되기 전에 커널 런치가 반환되므로 실행 시간이 아닌 디스패치 시간을 측정하게 됩니다. 세 가지 모두 정확해야 의미 있는 숫자가 됩니다."
+    },
+    {
+      "stage": "pre",
+      "question": "FLOPs와 온디바이스 지연 시간(latency)은 완벽하게 상관관계가 없습니다. 그 이유는 무엇인가요?",
+      "options": [
+        "FLOPs 카운터가 고장났다",
+        "연산마다 하드웨어 친화도가 다르다; 깊이별 합성곱(depthwise convolution)은 FLOPs는 낮지만 GPU에서 메모리 바운드(memory-bound)될 수 있고, 밀집 합성곱(dense convolution)은 텐서 코어(Tensor Cores)를 효율적으로 사용한다. 메모리 대역폭(memory bandwidth), 커널 실행 오버헤드(kernel launch overhead), 캐시 동작(cache behaviour)도 원시 FLOPs를 넘어 지연 시간을 형성한다",
+        "FLOPs는 배치 크기(batch size)를 무시한다",
+        "PyTorch가 FLOPs를 잘못 계산한다"
+      ],
+      "correct": 1,
+      "explanation": "FLOPs는 저렴한 대리자(cheap proxy) 지표다. 실제 벽시계 지연 시간(wall-clock latency)은 연산이 하드웨어의 강점과 얼마나 잘 맞는지에 따라 달라진다: 밀집 행렬 곱셈(dense matmul)은 텐서 코어를 최대 활용하고, 깊이별 합성곱(depthwise conv)은 메모리 대역폭에서 정체되며, 어텐션(attention)은 시퀀스 길이^2에 비례하는 메모리 읽기로 인해 정체된다. 아키텍처 탐색(architecture search)에는 FLOPs가 유용하지만, 배포 결정(deployment decisions)에는 대상 장치에서 직접 측정해야 한다."
+    },
+    {
+      "stage": "post",
+      "question": "훈련 후 정적 INT8 양자화는 일반적으로 ImageNet-클래스 비전 모델에서 정확도를 얼마나 잃나요?",
+      "options": [
+        "5-10 퍼센트 포인트",
+        "적절하게 보정 시 0.1-1 퍼센트 포인트; 배치 정규화-융합 컨브 모델은 INT8 하에서 특히 잘 동작함",
+        "항상 0; 무손실",
+        "20+ 포인트; 사용 불가"
+      ],
+      "correct": 1,
+      "explanation": "잘 보정된 비전 모델에서 정적 PTQ는 약 0.1~1 포인트 정확도 손실이 발생합니다. 주요 손실 원인은 (a) 불충분한 보정 데이터, (b) 극단적 이상치가 있는 활성화 양자화(채널별 양자화 또는 클리핑으로 해결), (c) 융합되지 않은 배치 정규화 계층입니다. 이러한 요소들이 처리되면 INT8은 실질적으로 무료입니다."
+    },
+    {
+      "stage": "post",
+      "question": "모바일 앱에 10MB 미만, 10ms 미만의 지연 시간을 갖는 비전 모델이 필요합니다. 어떤 백본을 선택하시겠습니까?",
+      "options": [
+        "ResNet-50",
+        "MobileNetV3-Small 또는 EfficientNet-Lite-B0를 INT8로 양자화; 둘 다 이 예산을 대상으로 하며 TFLite / Core ML로 깔끔하게 컴파일됨",
+        "ViT-Base",
+        "ConvNeXt-Large"
+      ],
+      "correct": 1,
+      "explanation": "2026년에도 모바일 비전 분야에서는 MobileNetV3와 EfficientNet-Lite 변형 모델이 여전히 주류를 이루고 있습니다. 이는 해당 예산에 맞춰 설계되었기 때문입니다: 깊이별 합성곱(depthwise conv), h-swish, squeeze-excite, 양자화 인식(quantisation-aware) 기능이 처음부터 적용되었습니다. ResNet-50과 ViT-Base는 FP32에서 100MB+, INT8에서 25MB+로, 지연 시간 측정 전에 이미 크기 예산을 초과합니다."
+    },
+    {
+      "stage": "post",
+      "question": "PyTorch 모델을 opset 17로 ONNX로 내보낼 때 'Unsupported operator' 오류가 발생합니다. 가장 가능성 있는 원인은 무엇인가요?",
+      "options": [
+        "ONNX 라이브러리가 오래됨",
+        "(1) ONNX 매핑이 없는 사용자 정의 연산; (2) 추적(tracing)으로 캡처할 수 없는 비결정적 제어 흐름 경로; (3) Python에서는 암시적이지만 ONNX에 해당하는 표현이 없는 텐서-스칼라 상호작용. 해결 방법: 연산 교체, 제어 흐름에 `torch.jit.script` 사용, 또는 opset 업그레이드",
+        "모델에 매개변수가 너무 많음",
+        "입력 형태가 잘못됨"
+      ],
+      "correct": 1,
+      "explanation": "ONNX 내보내기는 기본적으로 추적(tracing)을 수행하므로, 추적이 캡처할 수 없는 것(런타임 제어 흐름, Python 수준의 분기, 사용자 정의 CUDA 연산 등)은 실패합니다. 대부분의 오류는 ONNX에 해당하는 표현이 없는 단일 노드(종종 작은 사용자 정의 연산이나 torch.special.* 호출) 때문입니다. 해결 방법은 연산 교체, `torch.jit.script`로 전환, 또는 해당 연산이 존재하는 더 새로운 opset으로 이동하는 것입니다."
+    }
+  ]
+}

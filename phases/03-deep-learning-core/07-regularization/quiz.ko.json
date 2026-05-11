@@ -1,0 +1,62 @@
+[
+  {
+    "question": "신경망에서 과적합(overfitting)이란 무엇인가요?",
+    "options": [
+      "모델이 너무 작아 데이터를 학습하지 못함",
+      "모델이 일반화 가능한 패턴을 학습하는 대신 훈련 데이터를 암기하여 훈련 정확도와 테스트 정확도 간 큰 차이를 보임",
+      "모델 학습 속도가 너무 느림",
+      "손실 함수(loss function)가 잘못됨"
+    ],
+    "correct": 1,
+    "explanation": "과적합(overfitting)은 모델이 높은 훈련 정확도(training accuracy)를 달성하지만 테스트 정확도(test accuracy)는 낮을 때 발생합니다. 이는 기본 패턴(underlying patterns)을 학습하는 대신 훈련 데이터의 노이즈(noise)를 암기했기 때문입니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "드롭아웃(dropout)은 어떻게 신경망(neural network)을 정규화(regularize)하나요?",
+    "options": [
+      "가장 성능이 낮은 뉴런(neuron)을 영구적으로 제거합니다",
+      "훈련 중에 뉴런을 무작위로 비활성화(0으로 설정)하여 네트워크가 중복된 표현(redundant representations)을 학습하도록 강제합니다",
+      "학습률(learning rate)을 감소시킵니다",
+      "훈련 데이터에서 이상치(outliers)를 제거합니다"
+    ],
+    "correct": 1,
+    "explanation": "각 순전파(forward pass) 동안 드롭아웃은 확률 p로 뉴런 출력을 무작위로 0으로 설정합니다. 이는 공동 적응(co-adaptation, 특정 뉴런에 의존하는 현상)을 방지하며, 2^N개의 부분 네트워크(subnetwork) 앙상블을 훈련하는 것과 동일한 효과를 가집니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "트랜스포머가 배치 정규화(BatchNorm) 대신 레이어 정규화(LayerNorm)를 사용하는 이유는 무엇인가요?",
+    "options": [
+      "레이어 정규화(LayerNorm)는 계산 속도가 더 빠름",
+      "레이어 정규화(LayerNorm)는 샘플별 특성(배치 독립적)을 정규화하여 가변 시퀀스 길이와 작은 배치 크기에서도 작동함",
+      "배치 정규화(BatchNorm)는 기울기 폭발(gradient explosion)을 유발함",
+      "레이어 정규화(LayerNorm)가 더 최근에 발명됨"
+    ],
+    "correct": 1,
+    "explanation": "배치 정규화(BatchNorm)는 배치 통계에 의존하는데, 이는 작은 배치에서 노이즈가 심하고 배치 크기 1(생성 시 일반적)에서는 무의미함. 레이어 정규화(LayerNorm)는 배치 크기와 무관하게 각 샘플 내 특성들을 정규화함.",
+    "stage": "post"
+  },
+  {
+    "question": "RMSNorm과 LayerNorm의 주요 차이점은 무엇인가요?",
+    "options": [
+      "RMSNorm은 배치 통계를 사용합니다",
+      "RMSNorm은 평균 계산을 생략하고 제곱평균제곱근(root mean square)으로만 나누어 ~10% 속도 향상을 제공하며 정확도는 동일합니다",
+      "RMSNorm은 학습 가능한 매개변수를 추가합니다",
+      "RMSNorm은 CNN에서만 작동합니다"
+    ],
+    "correct": 1,
+    "explanation": "RMSNorm은 LayerNorm에서 평균 계산 단계를 제거하는데, 이는 정확도에 거의 영향을 주지 않지만 계산량을 줄입니다. LLaMA, Mistral 및 대부분의 최신 LLM(Large Language Model)은 이러한 효율성 향상을 위해 RMSNorm을 사용합니다.",
+    "stage": "post"
+  },
+  {
+    "question": "PyTorch에서 추론(inference) 전에 model.eval()을 호출하는 것이 왜 중요한가요?",
+    "options": [
+      "계산 속도를 높입니다",
+      "드롭아웃(dropout)을 비활성화하고 배치 정규화(BatchNorm)가 배치 통계 대신 실행 통계를 사용하도록 전환하여 결정적 출력을 제공합니다",
+      "GPU 메모리를 해제합니다",
+      "기울기(gradient) 계산을 활성화합니다"
+    ],
+    "correct": 1,
+    "explanation": "model.eval()을 호출하지 않으면 추론 시 드롭아웃이 뉴런을 무작위로 비활성화(출력 변동 유발)하고, 배치 정규화(BatchNorm)가 훈련 중 누적된 안정적인 실행 평균 대신 현재 배치 통계를 사용합니다.",
+    "stage": "post"
+  }
+]

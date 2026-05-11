@@ -1,0 +1,67 @@
+[
+  {
+    "id": "nb-pre-1",
+    "stage": "pre",
+    "question": "나이브 베이즈에서 '나이브(naive)' 가정은 무엇인가요?",
+    "options": [
+      "각 클래스의 사전 확률이 동일하다",
+      "클래스 레이블이 주어졌을 때 모든 특성(feature)은 조건부 독립이다",
+      "데이터가 정규 분포를 따른다",
+      "모델에 학습할 매개변수가 없다"
+    ],
+    "correct": 1,
+    "explanation": "나이브 베이즈는 클래스에 조건부로 주어졌을 때 모든 특성이 서로 독립적이라고 가정합니다. 이는 수학적으로 틀린 가정(예: 'machine'과 'learning'은 함께 등장함)이지만 실제로는 잘 작동합니다."
+  },
+  {
+    "id": "nb-pre-2",
+    "stage": "pre",
+    "question": "라플라스 스무딩(Laplace smoothing)은 나이브 베이즈(Naive Bayes)에서 무엇을 방지하나요?",
+    "options": [
+      "대규모 데이터셋에 대한 과적합(overfitting)",
+      "훈련 중 특정 클래스에서 한 번도 나타나지 않은 단어의 확률 0 문제",
+      "고차원 데이터에서의 느린 훈련 속도",
+      "데이터셋의 클래스 불균형(class imbalance)"
+    ],
+    "correct": 1,
+    "explanation": "스무딩을 적용하지 않으면 '스팸(spam)' 훈련 이메일에 한 번도 나타나지 않은 단어의 경우 P(word|spam) = 0이 되어 다른 강력한 증거와 관계없이 전체 곱이 0이 됩니다. 라플라스 스무딩은 각 카운트에 1을 더합니다."
+  },
+  {
+    "id": "nb-post-1",
+    "stage": "post",
+    "question": "텍스트에 대해 나이브 독립성 가정은 명백히 잘못되었습니다. 그런데도 나이브 베이즈가 잘 분류하는 이유는 무엇인가요?",
+    "options": [
+      "독립성이 성립하는 매우 작은 어휘에서만 작동하기 때문",
+      "분류는 정확한 확률 추정이 아닌 올바른 클래스 순위만 필요로 하며, 가정이 모든 클래스에 유사하게 영향을 주는 안정적인 오류를 도입하기 때문",
+      "현대 구현체들은 비밀리에 독립성 가정을 제거하기 때문",
+      "특징들이 진정으로 독립적일 때만 작동하기 때문"
+    ],
+    "correct": 1,
+    "explanation": "NB는 정확한 확률 추정이 아닌 클래스를 올바르게 순위 매기는 것이 필요합니다. 독립성 가정은 높은 편향(high bias)이지만 낮은 분산(low variance)을 가져 제한된 데이터에서도 안정적입니다. 상관관계가 있는 특징들은 정답 클래스에 대한 증거를 중복 계산하기도 합니다."
+  },
+  {
+    "id": "nb-post-2",
+    "stage": "post",
+    "question": "Multinomial NB와 Gaussian NB는 언제 사용해야 하나요?",
+    "options": [
+      "회귀에는 Multinomial, 분류에는 Gaussian",
+      "단어 개수/빈도 특징에는 Multinomial, 연속형 실수값 특징에는 Gaussian",
+      "이진 데이터에는 Multinomial, 다중 클래스 문제에는 Gaussian",
+      "호환 가능 -- 항상 더 빠른 것 사용"
+    ],
+    "correct": 1,
+    "explanation": "Multinomial NB는 특징 카운트(텍스트의 단어 빈도)를 모델링합니다. Gaussian NB는 특징이 정규 분포를 따른다고 가정하며, 측정값이나 센서 판독값과 같은 연속형 특징에 적합합니다."
+  },
+  {
+    "id": "nb-post-3",
+    "stage": "post",
+    "question": "이메일에 'free'가 2번, 'money'가 1번 포함되어 있습니다. 로그 확률을 사용하는 다항 나이브 베이즈(Multinomial NB)에서 스팸 점수는 어떻게 계산되나요?",
+    "options": [
+      "log P(스팸) + log P(free|스팸) + log P(money|스팸)",
+      "log P(스팸) + 2 * log P(free|스팸) + 1 * log P(money|스팸)",
+      "P(스팸) * P(free|스팸) * P(money|스팸)",
+      "log P(스팸) * 2 * log P(free|스팸)"
+    ],
+    "correct": 1,
+    "explanation": "다항 나이브 베이즈는 단어 출현 횟수만큼 단어 확률을 거듭제곱하여 곱합니다. 로그 공간에서는 log P(스팸) + 2*log P(free|스팸) + 1*log P(money|스팸)로 표현됩니다. 단어 출현 횟수는 지수 역할을 합니다."
+  }
+]

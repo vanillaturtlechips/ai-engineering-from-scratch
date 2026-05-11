@@ -1,0 +1,62 @@
+[
+  {
+    "question": "DPO의 RLHF 대비 주요 장점은 무엇인가요?",
+    "options": [
+      "DPO는 더 나은 모델을 생성합니다",
+      "DPO는 별도의 보상 모델(reward model)과 PPO가 필요 없어, 단일 루프에서 선호도 쌍(preference pairs)을 직접 학습합니다",
+      "DPO는 더 적은 학습 데이터를 사용합니다",
+      "DPO는 선호도 데이터 없이도 작동합니다"
+    ],
+    "correct": 1,
+    "explanation": "RLHF는 보상 모델(reward model)을 별도로 학습한 후 PPO 최적화를 실행해야 합니다. DPO는 두 단계를 단일 학습 목적 함수로 통합해 선호도 쌍(preference pairs) 기반으로 언어 모델을 직접 최적화합니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "DPO에서 참조 모델(reference model)은 어떤 역할을 하나요?",
+    "options": [
+      "훈련 데이터를 생성합니다",
+      "RLHF의 KL 페널티(KL penalty)와 유사하게 훈련된 모델이 지나치게 벗어나는 것을 방지하는 앵커(anchor) 역할을 합니다",
+      "모델 품질을 평가합니다",
+      "토큰화(tokenization)를 처리합니다"
+    ],
+    "correct": 1,
+    "explanation": "DPO 손실 함수는 훈련된 정책(policy)과 참조 모델(일반적으로 SFT 모델) 간의 로그 확률(log probability)을 비교합니다. 참조 모델은 정책이 얼마나 벗어날 수 있는지 제한하여 명시적인 KL 조정 없이도 보상 해킹(reward hacking)을 방지합니다.",
+    "stage": "pre"
+  },
+  {
+    "question": "DPO에서 베타(beta) 파라미터는 무엇을 제어하나요?",
+    "options": [
+      "학습률(learning rate)",
+      "정책이 참조 모델(reference model)에 가까이 유지되도록 하는 강도 -- 베타가 높을수록 보수적인 업데이트",
+      "배치 크기(batch size)",
+      "훈련 에포크(epoch) 수"
+    ],
+    "correct": 1,
+    "explanation": "베타(beta)는 암시적 KL 발산(KL divergence) 페널티를 조정합니다. 베타=0.1은 모델이 참조 모델에서 크게 벗어나도록 허용하지만(더 나은 성능 가능성 있지만 위험), 베타=0.5는 참조 모델에 가깝게 유지합니다(안전하지만 학습 효과 감소).",
+    "stage": "post"
+  },
+  {
+    "question": "DPO는 어떻게 보상 모델(reward model)을 암묵적으로 표현하나요?",
+    "options": [
+      "표현하지 않는다 -- DPO에는 보상 개념이 없다",
+      "DPO 손실 함수(loss function)는 보상 함수(reward function) 하에서 최적 정책(policy)이 정책 로그 확률(policy log probabilities)을 통해 직접 표현 가능함을 보여 유도될 수 있다",
+      "언어 모델 내부에 숨겨진 보상 모델(reward model)을 훈련시킨다",
+      "DPO는 손실 함수(loss function)를 보상(reward)으로 사용한다"
+    ],
+    "correct": 1,
+    "explanation": "Rafailov 등은 RLHF 목적 함수의 닫힌형 해(closed-form solution)가 참조(reference) 대비 정책(policy)의 로그 확률(log-probabilities) 함수로 보상을 표현함을 보였다. DPO는 이를 직접 최적화하여 보상을 암묵적으로 학습한다.",
+    "stage": "post"
+  },
+  {
+    "question": "RLHF가 DPO보다 선호될 수 있는 경우는 언제인가요?",
+    "options": [
+      "항상 -- RLHF가 엄격하게 더 우수함",
+      "여러 정책 평가를 위한 재사용 가능한 보상 모델이 필요하거나 온라인 데이터 수집이 유익할 때",
+      "선호 데이터가 적을 때",
+      "더 작은 모델을 훈련할 때"
+    ],
+    "correct": 1,
+    "explanation": "DPO는 오프라인(고정된 선호 데이터) 방식입니다. RLHF는 보상 모델이 새로운 생성 결과를 점수화하는 온라인 데이터 수집을 허용하여 보상 조작 패턴을 발견할 수 있습니다. 독립적인 보상 모델은 평가 및 다른 정책에도 유용합니다.",
+    "stage": "post"
+  }
+]
